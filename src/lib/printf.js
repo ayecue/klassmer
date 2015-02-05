@@ -11,10 +11,9 @@ var forEach = require('./forEach'),
 	/**
 	 *	Variables
 	 */
-	rxFirst = '%(?::([^:]+):)?',
-	rxLast = '%',
+	rxFirst = '<%=\\s*(?::([^:]+):)?\\s*',
+	rxLast = '\\s*%>',
 	rxGlobal = 'gi',
-	rxReplace = /%[^%]+%/ig,
 	/**
 	 *	Different Types
 	 */
@@ -154,15 +153,15 @@ var forEach = require('./forEach'),
 				return formatCmds ? forEach(formatCmds.split(','),function(_,cmd){
 					this.result = format(this.result,cmd);
 				},value) : value;
-			}).replace(rxReplace,'');
+			});
 		} else if (typeof object === 'object') {
 			return forEach(object,function(key,value){
-				this.result = this.result.replace(new RegExp(rxFirst + key + rxLast, rxGlobal), function(toReplace,formatCmds){					
+				this.result = this.result.replace(new RegExp(rxFirst + key + rxLast, rxGlobal), function(toReplace,formatCmds){				
 					return formatCmds ? forEach(formatCmds.split(','),function(_,cmd){
 						this.result = format(this.result,cmd);
 					},value) : value;
 				});
-			},string).replace(rxReplace,'');
+			},string);
 		}
 	
 		return string;

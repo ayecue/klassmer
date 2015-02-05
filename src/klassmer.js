@@ -28,9 +28,9 @@ module.exports = {
             separator: options.separator || "\n\n",
             namespace: options.namespace || "result",
             wrapper: {
-                module: options.module || "var %idx% = (function(){ %code% })();",
-                start: options.start || "(function (global, factory) {global.%namespace% = factory(global);}(this, function (global) {",
-                end: options.end || "return %namespace%;}));"
+                module: options.module || "var <%= idx %> = (function(){ <%= code %> })();",
+                start: options.start || "(function (global, factory) {global.<%= namespace %> = factory(global);}(this, function (global) {",
+                end: options.end || "return <%= namespace %>;}));"
             },
             wrap: {
                 moduleFile: options.moduleFile,

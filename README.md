@@ -1,4 +1,4 @@
-# klassmer v0.2.3 
+# klassmer v0.2.4
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
