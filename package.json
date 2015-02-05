@@ -41,6 +41,8 @@
     "merger",
     "uglify-js",
     "commonjs2browser",
-    "klassmer"
+    "klassmer",
+    "modules",
+    "amd"
   ]
 }
