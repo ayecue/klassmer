@@ -1,0 +1,23 @@
+#! /usr/bin/env node
+// -*- js -*-
+
+"use strict";
+
+var fs = require('fs'),
+	program = require('commander'),
+	Klassmer = require('../src/klassmer');
+ 
+program
+	.option('-sep, --separator [value]', 'Add separator')
+	.option('-ns, --namespace [value]', 'Add namespace')
+	.option('-m, --module [value]', 'Add module')
+	.option('-stpl, --start [value]', 'Add start')
+	.option('-etpl, --end [value]', 'Add end')
+	.option('-mf, --moduleFile [value]', 'Add moduleFile')
+	.option('-sf, --startFile [value]', 'Add startFile')
+	.option('-ef, --endFile [value]', 'Add endFile')
+	.option('-src, --source [value]', 'Add source')
+	.option('-out, --output [value]', 'Add output destination')
+	.parse(process.argv);
+
+Klassmer.run(program);

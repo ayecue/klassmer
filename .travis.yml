@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+- 0.10
+before_install: 
+- npm install -g uglify-js
+install: npm install
+before_script: nodeunit
