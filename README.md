@@ -1,4 +1,4 @@
-# klassmer v0.2.4
+# klassmer v0.2.5
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -23,46 +23,55 @@ This package will merge your CommonJS project to one file to use it in frontend 
 
 Example project: [require-klass](https://github.com/ayecue/require-klass)
 
+Simple merge:
+```shell
+klassmer --source tmp/klass.js --output amd/merged.js
+```
+
+Merge with namespace:
+```shell
+klassmer --source tmp/klass.js --output amd/merged.js --namespace klass
+```
 
 ## Arguments
 
-#### -ns (--namespace)
-Type: `String`
-Name of the output variable of your main module.
-
-#### -m (--module)
-Type: `String`
-Wrapper for every single module.
-
-#### -stpl (--start)
-Type: `String`
-Start of wrapper for whole merged project.
-
-#### -etpl (--end)
-Type: `String`
-End of wrapper for whole merged project.
-
-#### -mf (--moduleFile)
-Type: `String`
-Path to file which should wrap for every single module.
-
-#### -sf (--startFile)
-Type: `String`
-Path to file which should start wrapping the whole merged project.
-
-#### -ef (--endFile)
-Type: `String`
-Path to file which should end wrapping the whole merged project.
-
-#### -src (--source)
+#### -f, --source
 Type: `String`
 Path to main project file. (All other files will get loaded automaticly)
 
-#### -out (--output)
+#### -t, --output
 Type: `String`
 Path to merged output file.
 
-#### -sep (--separator)
+#### -n, --namespace (optional)
+Type: `String`
+Name of the output variable of your main module.
+
+#### -m, --module (optional)
+Type: `String`
+Wrapper for every single module.
+
+#### -s, --start (optional)
+Type: `String`
+Start of wrapper for whole merged project.
+
+#### -e, --end (optional)
+Type: `String`
+End of wrapper for whole merged project.
+
+#### -w, --moduleFile (optional)
+Type: `String`
+Path to file which should wrap for every single module.
+
+#### -a, --startFile (optional)
+Type: `String`
+Path to file which should start wrapping the whole merged project.
+
+#### -z, --endFile (optional)
+Type: `String`
+Path to file which should end wrapping the whole merged project.
+
+#### -p, --separator (optional)
 Type: `String`
 Seperator between all modules.
 
