@@ -18,7 +18,7 @@ npm install klassmer
 
 This package will merge your CommonJS project to one file to use it in frontend without any overhead.
 
-Since `~0.3.0` there's also an autoloader which also loads external modules. If you don't to add certain modules you are able to exclude them with the new `excludes` property.
+Since `~0.3.0` there's also an autoloader which also loads external modules. If you don't want to add certain modules you are able to exclude them with the new `excludes` property.
 
 
 ## Example:
