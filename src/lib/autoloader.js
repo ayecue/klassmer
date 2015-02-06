@@ -156,7 +156,7 @@ Autoloader.prototype = {
             result = me.find(target);
 
             if (!me.existFile(result)) {
-                throw new Error('Cannot find file: ' + target);
+                throw new Error('Cannot find module: ' + target);
             }
         }
 
