@@ -21,7 +21,7 @@ module.exports = {
     printf : require('./lib/printf'),
     finder : require('./lib/finder'),
     Parser : require('./lib/parser'),
-    Config : require("./lib/config"),
+    Config : require('./lib/config'),
     Merger : require('./lib/merger'),
     run : function(options){
         var config = new this.Config({
@@ -37,6 +37,8 @@ module.exports = {
                 startFile: options.startFile,
                 endFile: options.endFile
             },
+            excludes: options.excludes,
+            pkg: options.package,
             src: options.source,
             out: options.output,
             optimizer: options.optimizer || {
@@ -49,14 +51,13 @@ module.exports = {
             config.validate();
 
             var parser = new this.Parser(
-                    config.namespace,
                     config.wrapper.module,
                     config.wrapper.start,
                     config.wrapper.end,
                     config.separator,
                     config.optimizer
                 ),
-                merger = new this.Merger(config.src,parser);
+                merger = new this.Merger(config.pkg,parser,config.excludes);
 
             merger.getListener().on('load',function(main,map){
                 console.info(("Merging " + map.size() + " files...").grey.italic);

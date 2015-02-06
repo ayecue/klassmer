@@ -10,15 +10,19 @@
 var Generator = require('./generator'),
     Factory = require('./factory'),
     Listener = require('./listener'),
+    Autoloader = require('./autoloader'),
     CONSTANTS = require('./constants');
 
-function Merger(mainfile,parser){
+function Merger(pkg,parser,excludes){
 	var me = this;
 
-    me.factory = new Factory(parser);
-    me.main = me.factory.create(mainfile,null,parser.getNamespace());
+    me.pkg = pkg;
+    me.autoloader = new Autoloader(pkg,excludes);
+    me.factory = new Factory(parser,pkg,me.autoloader);
+    me.main = me.factory.create(pkg.get('main'),null,pkg.get('name'));
     me.parser = parser;
     me.listener = new Listener();
+    me.excludes = excludes;
 }
 
 Merger.prototype = {
@@ -42,13 +46,13 @@ Merger.prototype = {
 
         var code = [
             me.parser.process(me.parser.getStart(),{
-                namespace : me.parser.getNamespace()
+                namespace : me.pkg.get('name')
             }),
             map.each(function(module){
                 this.result.push(module.compile());
             },[]).join(seperator),
             me.parser.process(me.parser.getEnd(),{
-                namespace : me.parser.getNamespace()
+                namespace : me.pkg.get('name')
             })
         ].join(seperator);
 

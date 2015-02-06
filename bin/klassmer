@@ -7,6 +7,10 @@ var fs = require('fs'),
 	colors = require('colors'),
 	program = require('commander'),
 	Klassmer = require('../src/klassmer');
+
+function list(v) {
+	return v.split(',');
+}
  
 program
 	.option('-p, --separator [value]', '(optional) seperator between all modules'.grey.italic)
@@ -14,11 +18,13 @@ program
 	.option('-m, --module [value]', '(optional) wrapper for every single module'.grey.italic)
 	.option('-s, --start [value]', '(optional) start of wrapper for whole merged project'.grey.italic)
 	.option('-e, --end [value]', '(optional) end of wrapper for whole merged project'.grey.italic)
-	.option('-w, --moduleFile [value]', '(optional) path to file which should wrap for every single module'.grey.italic)
-	.option('-a, --startFile [value]', '(optional) path to file which should start wrapping the whole merged project'.grey.italic)
-	.option('-z, --endFile [value]', '(optional) path to file which should end wrapping the whole merged project'.grey.italic)
-	.option('-f, --source [value]', 'path to main project file (All other files will get loaded automaticly)'.grey.bold)
-	.option('-t, --output [value]', 'path to merged output file'.grey.bold)
+	.option('-w, --moduleFile <path>', '(optional) path to file which should wrap for every single module'.grey.italic)
+	.option('-a, --startFile <path>', '(optional) path to file which should start wrapping the whole merged project'.grey.italic)
+	.option('-z, --endFile <path>', '(optional) path to file which should end wrapping the whole merged project'.grey.italic)
+	.option('-f, --source <path>', 'path to main project file (All other files will get loaded automaticly)'.grey.bold)
+	.option('-t, --output <path>', 'path to merged output file'.grey.bold)
+	.option('-x, --excludes <items>', '(optional) ignore certain require statements'.grey.bold, list)
+	.option('-g, --package <path>', 'path to package file (All other files will get loaded automaticly)'.grey.bold)
 	.parse(process.argv);
 
 Klassmer.run(program);

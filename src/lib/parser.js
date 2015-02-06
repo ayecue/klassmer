@@ -12,10 +12,9 @@ var fs = require('fs'),
 	uglifyjs = require('uglify-js'),
 	CONSTANTS = require('./constants');
 
-function Parser(namespace,module,start,end,separator,optimizer){
+function Parser(module,start,end,separator,optimizer){
 	var me = this;
 
-	me.namespace = namespace;
 	me.module = module;
 	me.start = start;
 	me.end = end;
@@ -25,9 +24,6 @@ function Parser(namespace,module,start,end,separator,optimizer){
 
 Parser.prototype = {
 	self : Parser,
-	getNamespace : function(){
-		return this.namespace;
-	},
 	getSeperator : function(){
 		return this.separator;
 	},

@@ -11,7 +11,6 @@ var fs = require('fs'),
     uglifyjs = require('uglify-js'),
     path = require('path'),
     forEach = require('./forEach'),
-    normalizer = require('./normalizer'),
     finder = require('./finder'),
     indexOf = require('./indexOf'),
     Dependencies = require('./dependencies'),
@@ -98,26 +97,39 @@ Module.prototype = {
             resultType : CONSTANTS.SELECTOR.MULTIPLE
         }]);
 
-        var requires = me.batch.get(CONSTANTS.FINDER.REQUIRES);
+        var requires = me.batch.get(CONSTANTS.FINDER.REQUIRES),
+            toRemove = [];
 
         requires.each(function(node){
-            var modulePath = normalizer(me.modulePath,node.args[0].value,me.basedir),
-                module = me.factory.create(modulePath,me.basedir),
-                vardef = node.$prev,
-                dep = {
-                    modulePath : modulePath,
-                    node : node
-                };
-
-            if (vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
-                dep.name = node.$prev.name.name;
-                dep.nesting = node.expression.scope.nesting; 
-            } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
-                node.modulePath = modulePath;
+            if (!node.args[0]) {
+                return;
             }
 
-            me.dependencies.add(dep);
+            var file = me.factory.getAutoloader().get(me.modulePath,node.args[0].value);
+
+            if (file.validate() === true) {
+                var modulePath = file.getPath(),
+                    module = me.factory.create(modulePath,me.basedir),
+                    vardef = node.$prev,
+                    dep = {
+                        modulePath : modulePath,
+                        node : node
+                    };
+
+                if (vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
+                    dep.name = node.$prev.name.name;
+                    dep.nesting = node.expression.scope.nesting; 
+                } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
+                    node.modulePath = modulePath;
+                }
+
+                me.dependencies.add(dep);
+            } else {
+                toRemove.push(node);
+            }
         });
+
+        requires.remove.apply(requires,toRemove);
 
         return me;
     },
@@ -169,7 +181,9 @@ Module.prototype = {
             allScopes.each(function(scope){
                 var variable = scope.find_variable(dep.name);
 
-                variable.name = id;
+                if (variable) {
+                    variable.name = id;
+                }
             });
         });
 
@@ -193,7 +207,7 @@ Module.prototype = {
                 if (definitions.length === 0) {
                     var $scope = $var.$prev,
                         index = indexOf($scope.body,function(expression){
-                            return expression.TYPE === CONSTANTS.TYPES.VAR && expression.id === $var.id;
+                            return expression && expression.TYPE === CONSTANTS.TYPES.VAR && expression.id === $var.id;
                         });
 
                     if (index !== -1) {

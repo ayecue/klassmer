@@ -1,4 +1,4 @@
-# klassmer v0.2.5
+# klassmer v0.3.0
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -74,6 +74,14 @@ Path to file which should end wrapping the whole merged project.
 #### -p, --separator (optional)
 Type: `String`
 Seperator between all modules.
+
+#### -g, --package (optional)
+Type: `String`
+Path to package file (All other files will get loaded automaticly).
+
+#### -x, --excludes (optional)
+Type: `String`
+Ignore certain required modules.
 
 
 ## Functions

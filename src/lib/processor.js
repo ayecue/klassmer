@@ -20,19 +20,26 @@ function Processor(type,args){
 }
 
 Processor.opts = {
-	single : function(property,node,batch){
-        if (node[property]) {
-			batch.evaluate(node,property);
-            this.findQueue(node[property],batch);
-        }
-	},
-	multi : function(property,node,batch){
-		var me = this,
-			values = from(node[property]);
+	single : function(properties,node,batch){
+		var me = this;
 
-		batch.evaluate(node,property);
-		forEach(values,function(_,v){
-			me.findQueue(v,batch);
+		forEach(from(properties),function(_,property){
+			if (node[property]) {
+				batch.evaluate(node,property);
+	            me.findQueue(node[property],batch);
+	        }
+		});
+	},
+	multi : function(properties,node,batch){
+		var me = this;
+
+		forEach(from(properties),function(_,property){
+			var values = from(node[property]);
+
+			batch.evaluate(node,property);
+			forEach(values,function(_,v){
+				me.findQueue(v,batch);
+			});
 		});
 	}
 };

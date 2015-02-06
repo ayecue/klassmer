@@ -21,13 +21,17 @@ exports.TYPES = {
 	SIMPLE_STATEMENT : "SimpleStatement",
 	TOPLEVEL : "Toplevel",
 	OBJECT : "Object",
-	OBJECT_KEY_VAL : "ObjectKeyVal" 
+	OBJECT_KEY_VAL : "ObjectKeyVal",
+	IF : "If",
+	BLOCK_STATEMENT : "BlockStatement"
 };
 
-exports.NORMALIZER = {
+exports.AUTOLOADER = {
 	RELATIVE : /^\.\//,
 	RELATIVE_BACK : /^\.\.\//,
-	LAST_DIR : /\/?[^\/]+\/?$/
+	LAST_DIR : /\/?[^\/]+\/?$/,
+	EXTENSION : /\.js$/i,
+	EMPTY : /^\/?$/
 };
 
 exports.ID = {
@@ -51,4 +55,8 @@ exports.FINDER = {
 exports.READ = {
 	ENCODING : 'utf8',
 	FLAG : 'r'
+};
+
+exports.PACKAGES = {
+	HOME : process.env.NODE_PATH
 };

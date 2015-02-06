@@ -27,6 +27,8 @@ Finder.opts[CONSTANTS.TYPES.SIMPLE_STATEMENT] =  new Processor('single',['body']
 Finder.opts[CONSTANTS.TYPES.TOPLEVEL] =  new Processor('multi',['body']).get();
 Finder.opts[CONSTANTS.TYPES.OBJECT] =  new Processor('multi',['properties']).get();
 Finder.opts[CONSTANTS.TYPES.OBJECT_KEY_VAL] =  new Processor('single',['value']).get();
+Finder.opts[CONSTANTS.TYPES.IF] =  new Processor('single',['body']).get();
+Finder.opts[CONSTANTS.TYPES.BLOCK_STATEMENT] =  new Processor('multi',['body']).get();
 
 Finder.prototype = {
 	self : Finder,

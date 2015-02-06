@@ -38,12 +38,35 @@ Selector.prototype = {
     getResultType : function(){
         return this.resultType;
     },
-    add : function(node){
+    indexOf : function(node){
         var me = this;
 
-        if (!me.isComplete()) {
-            me.found.push(node);
-        }
+        return forEach(me.found,function(_,n){
+            if (n.id == node.id) {
+                this.result = _;
+                this.skip = true;
+            }
+        },-1);
+    },
+    add : function(){
+        var me = this;
+
+        forEach(arguments,function(_,node){
+            if (!me.isComplete()) {
+                me.found.push(node);
+            }
+        });
+    },
+    remove : function(){
+        var me = this;
+
+        forEach(arguments,function(_,node){
+            var index = me.indexOf(node);
+
+            if (index !== -1) {
+                me.found.splice(index,1);
+            }
+        });
     },
     evaluate : function(node){
         var me = this;

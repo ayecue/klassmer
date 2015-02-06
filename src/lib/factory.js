@@ -12,10 +12,12 @@ var Generator = require('./generator'),
     Module = require('./module'),
     CONSTANTS = require('./constants');
 
-function Factory(parser){
+function Factory(parser,pkg,autoloader){
 	var me = this;
 
+    me.pkg = pkg;
     me.map = new $Map();
+    me.autoloader = autoloader;
     me.generator = new Generator(CONSTANTS.GENERATOR.MODULE);
     me.parser = parser;
 }
@@ -25,6 +27,9 @@ Factory.prototype = {
     create : function(modulePath,basedir,name){
         return this.map.find(modulePath) || new Module(modulePath,basedir,name,this);
     },
+    getPackage : function(){
+        return this.pkg;
+    },
     getParser : function(){
         return this.parser;
     },
@@ -33,6 +38,9 @@ Factory.prototype = {
     },
     getMap : function(){
         return this.map;
+    },
+    getAutoloader : function(){
+        return this.autoloader;
     }
 };
 

@@ -8,9 +8,11 @@
 'use strict';
 
 var fs = require('fs'),
+    querystring = require('querystring'),
     typeOf = require('./typeOf'),
     extend = require('./extend'),
     toArray = require('./toArray'),
+    Package = require('./package'),
     CONSTANTS = require('./constants');
 
 function Config(options){
@@ -26,7 +28,7 @@ Config.prototype = {
         var me = this,
             options = me.options;
 
-        if (!me.src) {
+        if (!me.src && !me.pkg) {
             throw new TypeError('Please define src parameter in options.');
         }
 
@@ -77,6 +79,18 @@ Config.prototype = {
 
         if (!me.optimizer) {
             throw new TypeError('Invalid optimizer options.');
+        }
+
+        if (!me.pkg) {
+            me.pkg = new Package({
+                main : me.src,
+                name : me.namespace
+            });
+        } else {
+            me.pkg = Package.read(me.pkg).apply({
+                main : me.src,
+                name : me.namespace
+            });
         }
     }
 };
