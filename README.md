@@ -1,4 +1,4 @@
-# klassmer v0.3.2
+# klassmer v0.3.3
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -20,6 +20,8 @@ This package will merge your CommonJS project to one file to use it in frontend 
 
 Since `~0.3.0` there's also an autoloader which also loads external modules. If you don't want to add certain modules you are able to exclude them with the new `excludes` property.
 
+Since `~0.3.2` klassmer automaticly detects if you have choosen a javascript file as source or a package json.
+
 
 ## Example:
 
@@ -39,7 +41,7 @@ klassmer --source tmp/klass.js --output amd/merged.js --namespace klass
 
 #### -f, --source
 Type: `String`
-Path to main project file. (All other files will get loaded automaticly)
+Path to main project javascript file or package json. (All other files will get loaded automaticly)
 
 #### -t, --output
 Type: `String`
@@ -76,10 +78,6 @@ Path to file which should end wrapping the whole merged project.
 #### -p, --separator (optional)
 Type: `String`
 Seperator between all modules.
-
-#### -g, --package (optional)
-Type: `String`
-Path to package file (All other files will get loaded automaticly).
 
 #### -x, --excludes (optional)
 Type: `String`
