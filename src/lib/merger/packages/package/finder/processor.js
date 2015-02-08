@@ -20,6 +20,23 @@ function Processor(type,args){
 }
 
 Processor.opts = {
+	either : function(properties,node,batch){
+		var me = this;
+
+		forEach(from(properties),function(_,property){
+			if (node[property]) {
+				var values = from(node[property]);
+
+				if (values.length > 0) {
+					batch.evaluate(node,property);
+					forEach(values,function(_,v){
+						me.findQueue(v,batch);
+					});
+					this.skip = true;
+				}
+			}
+		});
+	},
 	single : function(properties,node,batch){
 		var me = this;
 
@@ -34,12 +51,14 @@ Processor.opts = {
 		var me = this;
 
 		forEach(from(properties),function(_,property){
-			var values = from(node[property]);
+			if (node[property]) {
+				var values = from(node[property]);
 
-			batch.evaluate(node,property);
-			forEach(values,function(_,v){
-				me.findQueue(v,batch);
-			});
+				batch.evaluate(node,property);
+				forEach(values,function(_,v){
+					me.findQueue(v,batch);
+				});
+			}
 		});
 	}
 };

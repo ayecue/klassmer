@@ -16,6 +16,7 @@ var fs = require('fs'),
     finder = require('./finder'),
     indexOf = require('../../../common/indexOf'),
     Dependencies = require('./module/dependencies'),
+    Listener = require('../../../generic/listener'),
     CONSTANTS = require('../../../constants');
 
 function Module(modulePath,name,pkg){
@@ -25,9 +26,11 @@ function Module(modulePath,name,pkg){
     me.modulePath = modulePath;
     me.dependencies = new Dependencies();
     me.basedir = path.dirname(pkg.get('main'));
+    me.listener = new Listener();
     me.pkg = pkg;
     me.parsed = null;
     me.batch = null;
+    me.loaded = false;
 
     pkg.getMap().add(me);
 }
@@ -55,6 +58,7 @@ Module.prototype = {
         
         me.parsed = me.pkg.getParser().parse(me.id,me.modulePath);
         me.parsed.figure_out_scope();
+        me.listener.fire('parse',me,[me.parsed]);
         return me;
     },
     find : function(force){
@@ -119,19 +123,28 @@ Module.prototype = {
                 dep.nesting = node.expression.scope.nesting; 
             } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
                 node.modulePath = modulePath;
-            };
+            } else if (vardef.TYPE === CONSTANTS.TYPES.ASSIGN) {
+                node.modulePath = modulePath;
+            }
 
             me.dependencies.add(dep);
         });
 
         requires.remove.apply(requires,toRemove);
+        me.listener.fire('find',me,[me.batch]);
 
         return me;
     },
-    load : function(){
+    load : function(force){
         var me = this;
 
-        return me.dependencies.each(function(dep){
+        if (me.loaded && !force) {
+            return me.loaded;
+        }
+
+        me.listener.fire('load',me,[me.dependencies]);
+
+        return me.loaded = me.dependencies.each(function(dep){
             var modulePath = dep.modulePath,
                 module = me.pkg.getMap().find(modulePath),
                 result;
@@ -217,6 +230,13 @@ Module.prototype = {
                 $vardef.value = new uglifyjs.AST_SymbolRef({
                     name : module.getId()
                 });
+            } else if ($vardef.TYPE === CONSTANTS.TYPES.ASSIGN) {
+                var modulePath = node.modulePath,
+                    module = me.pkg.getMap().find(modulePath);
+
+                $vardef.right = new uglifyjs.AST_SymbolRef({
+                    name : module.getId()
+                });
             }
         });
 
@@ -253,6 +273,8 @@ Module.prototype = {
                 scope.expression.body.push(bodyReturn);
             });
         }
+
+        me.listener.fire('compile',me,[me.parsed]);
 
         return me.pkg.getParser().toString(me.parsed);
     }

@@ -22,13 +22,14 @@ Finder.opts[CONSTANTS.TYPES.FUNCTION] = new Processor('multi',['body']).get();
 Finder.opts[CONSTANTS.TYPES.VAR] =  new Processor('multi',['definitions']).get();
 Finder.opts[CONSTANTS.TYPES.VAR_DEF] =  new Processor('single',['value']).get();
 Finder.opts[CONSTANTS.TYPES.ASSIGN] =  new Processor('single',['right']).get();
-Finder.opts[CONSTANTS.TYPES.CALL] =  new Processor('single',['expression']).get();
+Finder.opts[CONSTANTS.TYPES.CALL] =  new Processor('either',[['args','expression']]).get();
 Finder.opts[CONSTANTS.TYPES.SIMPLE_STATEMENT] =  new Processor('single',['body']).get();
 Finder.opts[CONSTANTS.TYPES.TOPLEVEL] =  new Processor('multi',['body']).get();
 Finder.opts[CONSTANTS.TYPES.OBJECT] =  new Processor('multi',['properties']).get();
 Finder.opts[CONSTANTS.TYPES.OBJECT_KEY_VAL] =  new Processor('single',['value']).get();
 Finder.opts[CONSTANTS.TYPES.IF] =  new Processor('single',['body']).get();
 Finder.opts[CONSTANTS.TYPES.BLOCK_STATEMENT] =  new Processor('multi',['body']).get();
+Finder.opts[CONSTANTS.TYPES.RETURN] =  new Processor('single',['value']).get();
 
 Finder.prototype = {
 	self : Finder,

@@ -8,6 +8,7 @@
 'use strict';
 
 var path = require('path'),
+	printf = require('../common/printf'),
 	Listener = require('../generic/listener'),
 	extend = require('../common/extend'),
 	forEach = require('../common/forEach'),
@@ -56,6 +57,11 @@ Packages.prototype = {
 
 		if (CONSTANTS.PACKAGES.FILE_NAME === basename) {
 			options = Package.read(src);
+
+			if (!options.main) {
+				throw new TypeError(printf(CONSTANTS.ERRORS.PACKAGES_ADD,'src',src));
+			}
+
 			options.main = manipulator.extension(path.resolve(path.dirname(src),options.main));
 			options.name = name || options.name;
 		}

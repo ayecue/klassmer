@@ -23,7 +23,9 @@ exports.TYPES = {
 	OBJECT : "Object",
 	OBJECT_KEY_VAL : "ObjectKeyVal",
 	IF : "If",
-	BLOCK_STATEMENT : "BlockStatement"
+	BLOCK_STATEMENT : "BlockStatement",
+	SYMBOL_REF : "SymbolRef",
+	RETURN : "Return",
 };
 
 exports.AUTOLOADER = {
@@ -87,5 +89,6 @@ exports.ERRORS = {
 	AUTOLOADER_GET_FILE : 'Cannot find file: <%= file %>',
 	AUTOLOADER_GET_MODULE : 'Cannot find file: <%= module %>',
 	MODULE_LOAD : 'Invalid require path "<%= modulePath %>".',
-	PARSER_PARSE : 'Error while parsing <%= file %>'
+	PARSER_PARSE : 'Error while parsing <%= file %>.',
+	PACKAGES_ADD : 'Main package option is not defined in <%= src %>.'
 };
