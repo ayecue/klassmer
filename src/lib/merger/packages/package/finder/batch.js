@@ -7,10 +7,10 @@
  */
 'use strict';
 
-var Stack = require('./stack'),
-    forEach = require('./forEach'),
-    from = require('./from'),
-    Selector = require('./selector');
+var Stack = require('./batch/stack'),
+    forEach = require('../../../../common/forEach'),
+    from = require('../../../../common/from'),
+    Selector = require('./batch/selector');
 
 function Batch(selectors){
 	var me = this;

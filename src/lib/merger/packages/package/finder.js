@@ -8,11 +8,11 @@
 'use strict';
 
 var uglifyjs = require('uglify-js'),
-	Batch = require('./batch'),
-	from = require('./from'),
-	forEach = require('./forEach'),
-	Processor = require('./processor'),
-	CONSTANTS = require('./constants');
+	Batch = require('./finder/batch'),
+	from = require('../../../common/from'),
+	forEach = require('../../../common/forEach'),
+	Processor = require('./finder/processor'),
+	CONSTANTS = require('../../../constants');
 
 function Finder(){
 }

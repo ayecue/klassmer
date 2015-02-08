@@ -7,63 +7,45 @@
  */
 'use strict';
 
-var writeFile = require('./lib/writeFile'),
-    colors = require('colors');
+var colors = require('colors'),
+    CONSTANTS = require('./lib/constants');
 
 module.exports = {
-    forEach : require('./lib/forEach'),
-    typeOf : require('./lib/typeOf'),
-    toArray : require('./lib/toArray'),
-    from : require('./lib/from'),
-    Listener : require('./lib/listener'),
-    indexOf : require('./lib/indexOf'),
-    extend : require('./lib/extend'),
-    printf : require('./lib/printf'),
-    finder : require('./lib/finder'),
-    Parser : require('./lib/parser'),
-    Config : require('./lib/config'),
+    forEach : require('./lib/common/forEach'),
+    typeOf : require('./lib/common/typeOf'),
+    toArray : require('./lib/common/toArray'),
+    from : require('./lib/common/from'),
+    Listener : require('./lib/generic/listener'),
+    indexOf : require('./lib/common/indexOf'),
+    extend : require('./lib/common/extend'),
+    printf : require('./lib/common/printf'),
     Merger : require('./lib/merger'),
     run : function(options){
-        var config = new this.Config({
-            separator: options.separator || "\n\n",
-            namespace: options.namespace || "result",
-            wrapper: {
-                module: options.module || "var <%= idx %> = (function(){ <%= code %> })();",
-                start: options.start || "(function (global, factory) {global.<%= namespace %> = factory(global);}(this, function (global) {",
-                end: options.end || "return <%= namespace %>;}));"
-            },
-            wrap: {
-                moduleFile: options.moduleFile,
-                startFile: options.startFile,
-                endFile: options.endFile
-            },
-            excludes: options.excludes,
-            pkg: options.package,
-            src: options.source,
-            out: options.output,
-            optimizer: options.optimizer || {
-                beautify : true,
-                comments : true
-            }
-        });
-
         try {
-            config.validate();
-
-            var parser = new this.Parser(
-                    config.wrapper.module,
-                    config.wrapper.start,
-                    config.wrapper.end,
-                    config.separator,
-                    config.optimizer
-                ),
-                merger = new this.Merger(config.pkg,parser,config.excludes);
+            var merger = new this.Merger({
+                    separator: options.separator || CONSTANTS.DEFAULTS.SEPARATOR,
+                    namespace: options.namespace || CONSTANTS.DEFAULTS.NAMESPACE,
+                    wrapper: {
+                        module: options.module || CONSTANTS.DEFAULTS.MODULE,
+                        start: options.start || CONSTANTS.DEFAULTS.START,
+                        end: options.end || CONSTANTS.DEFAULTS.END
+                    },
+                    wrap: {
+                        moduleFile: options.moduleFile,
+                        startFile: options.startFile,
+                        endFile: options.endFile
+                    },
+                    excludes: options.excludes,
+                    src: options.source,
+                    out: options.output,
+                    optimizer: options.optimizer || CONSTANTS.DEFAULTS.OPTIMIZER
+                });
 
             merger.getListener().on('load',function(main,map){
                 console.info(("Merging " + map.size() + " files...").grey.italic);
             });
 
-            writeFile(config.out,merger.run());
+            merger.write();
 
             console.info("Merging complete...OK".green.bold);
         } catch (e) {

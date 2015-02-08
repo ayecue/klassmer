@@ -7,10 +7,10 @@
  */
 'use strict';
 
-var forEach = require('./forEach'),
-    namespace = require('./namespace'),
-    Condition = require('./condition'),
-    CONSTANTS = require('./constants');
+var forEach = require('../../../../../common/forEach'),
+    namespace = require('../../../../../common/namespace'),
+    Condition = require('./selector/condition'),
+    CONSTANTS = require('../../../../../constants');
 
 function Selector(config){
 	var me = this;

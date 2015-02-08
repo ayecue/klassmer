@@ -7,8 +7,9 @@
  */
 'use strict';
 
-var forEach = require('./forEach'),
-    indexOf = require('./indexOf');
+var forEach = require('../../common/forEach'),
+    indexOf = require('../../common/indexOf'),
+    CONSTANTS = require('../../constants');
 
 function Map(){
     this.collection = [];
@@ -92,7 +93,7 @@ Map.prototype = {
                         otherDeps = otherModule.getDependencies();
 
                     if (otherDeps.find(module.getModulePath())) {
-                        throw new Error('Dependency map is cyclic.');
+                        throw new Error(CONSTANTS.ERRORS.MAP_IS_CYCLIC);
                     }
                 },false);
 

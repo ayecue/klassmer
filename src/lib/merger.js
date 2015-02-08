@@ -7,22 +7,19 @@
  */
 'use strict';
 
-var Generator = require('./generator'),
-    Factory = require('./factory'),
-    Listener = require('./listener'),
-    Autoloader = require('./autoloader'),
-    CONSTANTS = require('./constants');
+var Listener = require('./generic/listener'),
+    Packages = require('./merger/packages'),
+    Config = require('./merger/config'),
+    writeFile = require('./common/writeFile');
 
-function Merger(pkg,parser,excludes){
+function Merger(options){
 	var me = this;
 
-    me.pkg = pkg;
-    me.autoloader = new Autoloader(pkg,excludes);
-    me.factory = new Factory(parser,pkg,me.autoloader);
-    me.main = me.factory.create(pkg.get('main'),null,pkg.get('name'));
-    me.parser = parser;
+    me.config = new Config(options).validate();
+    me.packages = new Packages(me.config);
     me.listener = new Listener();
-    me.excludes = excludes;
+
+    me.initEvents();
 }
 
 Merger.prototype = {
@@ -30,33 +27,25 @@ Merger.prototype = {
     getListener : function(){
         return this.listener;
     },
-    run : function(process){
-        var me = this,
-            map = me.factory.getMap(),
-            seperator = me.parser.optimizer.beautify ? me.parser.getSeperator() : '';
+    initEvents : function(){
+        var me = this;
 
-        me.main.parse().find();
-        me.listener.fire('find',me,[me.main,map]);
-
-        me.main.load();
-        me.listener.fire('load',me,[me.main,map]);
-
-        map.set(map.sort());
-        me.listener.fire('sort',me,[me.main,map]);
-
-        var code = [
-            me.parser.process(me.parser.getStart(),{
-                namespace : me.pkg.get('name')
-            }),
-            map.each(function(module){
-                this.result.push(module.compile());
-            },[]).join(seperator),
-            me.parser.process(me.parser.getEnd(),{
-                namespace : me.pkg.get('name')
+        me.packages.getListener()
+            .on('find',function(){
+                me.listener.fire('find',me,arguments);
             })
-        ].join(seperator);
+            .on('load',function(){
+                me.listener.fire('load',me,arguments);
+            })
+            .on('sort',function(){
+                me.listener.fire('sort',me,arguments);
+            });
+    },
+    write : function(){
+        var me = this,
+            output = me.packages.toString();
 
-        return code;
+        return writeFile(me.config.getOutput(),output);
     }
 };
 

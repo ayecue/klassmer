@@ -8,38 +8,48 @@
 'use strict';
 
 var fs = require('fs'),
-	printf = require('./printf'),
+	printf = require('../common/printf'),
 	uglifyjs = require('uglify-js'),
-	CONSTANTS = require('./constants');
+	CONSTANTS = require('../constants');
 
-function Parser(module,start,end,separator,optimizer){
+function Parser(config){
 	var me = this;
 
-	me.module = module;
-	me.start = start;
-	me.end = end;
-	me.separator = separator;
-	me.optimizer = optimizer;
+	me.wrapper = config.getWrapper();
+	me.separator = config.getSeparator();
+	me.optimizer = config.getOptimizer();
 }
 
 Parser.prototype = {
 	self : Parser,
-	getSeperator : function(){
+	setSeparator : function(separator){
+		this.separator = separator;
+		return this;
+	},
+	getSeparator : function(){
 		return this.separator;
+	},
+	setOptimizer : function(optimizer){
+		this.optimizer = optimizer;
+		return this;
 	},
 	getOptimizer : function(){
 		return this.optimizer;
 	},
+	setWrapper : function(wrapper){
+		this.wrapper = wrapper;
+		return this;
+	},
 	getStart : function(){
-		return this.start;
+		return this.wrapper.start;
 	},
 	getEnd : function(){
-		return this.end;
+		return this.wrapper.end;
 	},
 	wrap : function(idx,code){
 		var me = this;
 
-		return me.process(me.module, {
+		return me.process(me.wrapper.module, {
 			idx : idx,
 			code : code
 		});
@@ -55,11 +65,15 @@ Parser.prototype = {
             }),
 			wrapped = me.wrap(idx,code);
 
-		return uglifyjs.parse(wrapped);
+		try {
+			return uglifyjs.parse(wrapped);
+		} catch (e) {
+			throw new Error(printf(CONSTANTS.ERRORS.PARSER_PARSE,'file',file));
+		}
 	},
-	toString : function(node,optimizer){
+	toString : function(node){
 		var me = this,
-			stream = uglifyjs.OutputStream(me.optimizer || optimizer);
+			stream = uglifyjs.OutputStream(me.optimizer);
 
 		node.print(stream);
 

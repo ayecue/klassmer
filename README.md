@@ -1,4 +1,4 @@
-# klassmer v0.3.0
+# klassmer v0.3.2
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -123,7 +123,4 @@ Arguments: `Object`
 ## Classes
 
 #### klassmer.Listener
-#### klassmer.finder
-#### klassmer.Parser
-#### klassmer.Config
 #### klassmer.Merger

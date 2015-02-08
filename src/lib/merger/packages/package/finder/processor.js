@@ -7,9 +7,9 @@
  */
 'use strict';
 
-var toArray = require('./toArray'),
-	forEach = require('./forEach'),
-	from = require('./from');
+var toArray = require('../../../../common/toArray'),
+	forEach = require('../../../../common/forEach'),
+	from = require('../../../../common/from');
 
 function Processor(type,args){
 	var me = this;

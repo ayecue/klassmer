@@ -10,24 +10,26 @@
 var fs = require('fs'),
     uglifyjs = require('uglify-js'),
     path = require('path'),
-    forEach = require('./forEach'),
+    printf = require('../../../common/printf'),
+    typeOf = require('../../../common/typeOf'),
+    forEach = require('../../../common/forEach'),
     finder = require('./finder'),
-    indexOf = require('./indexOf'),
-    Dependencies = require('./dependencies'),
-    CONSTANTS = require('./constants');
+    indexOf = require('../../../common/indexOf'),
+    Dependencies = require('./module/dependencies'),
+    CONSTANTS = require('../../../constants');
 
-function Module(modulePath,basedir,name,factory){
+function Module(modulePath,name,pkg){
     var me = this;
 
-    me.id = name || factory.getGenerator().get();
+    me.id = name || pkg.getGenerator().get();
     me.modulePath = modulePath;
-    me.parsed = null;
     me.dependencies = new Dependencies();
-    me.basedir = basedir || path.dirname(modulePath);
+    me.basedir = path.dirname(pkg.get('main'));
+    me.pkg = pkg;
+    me.parsed = null;
     me.batch = null;
-    me.factory = factory;
 
-    factory.getMap().add(me);
+    pkg.getMap().add(me);
 }
 
 Module.prototype = {
@@ -41,12 +43,6 @@ Module.prototype = {
     getModulePath : function(){
         return this.modulePath;
     },
-    setBasedir : function(v){
-        if (this.basedir === null) {
-            this.basedir = v;
-        }
-        return this;
-    },
     getBasedir : function(){
         return this.basedir;
     },
@@ -57,7 +53,7 @@ Module.prototype = {
             return me;
         }
         
-        me.parsed = me.factory.getParser().parse(me.id,me.modulePath);
+        me.parsed = me.pkg.getParser().parse(me.id,me.modulePath);
         me.parsed.figure_out_scope();
         return me;
     },
@@ -105,28 +101,27 @@ Module.prototype = {
                 return;
             }
 
-            var file = me.factory.getAutoloader().get(me.modulePath,node.args[0].value);
+            var module = me.pkg.getAutoloader().get(me.modulePath,node.args[0].value);
 
-            if (file.validate() === true) {
-                var modulePath = file.getPath(),
-                    module = me.factory.create(modulePath,me.basedir),
-                    vardef = node.$prev,
-                    dep = {
-                        modulePath : modulePath,
-                        node : node
-                    };
-
-                if (vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
-                    dep.name = node.$prev.name.name;
-                    dep.nesting = node.expression.scope.nesting; 
-                } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
-                    node.modulePath = modulePath;
-                }
-
-                me.dependencies.add(dep);
-            } else {
-                toRemove.push(node);
+            if (!module) {
+                return toRemove.push(node);
             }
+
+            var modulePath = module.getModulePath(),
+                vardef = node.$prev,
+                dep = {
+                    modulePath : modulePath,
+                    node : node
+                };
+
+            if (vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
+                dep.name = node.$prev.name.name;
+                dep.nesting = node.expression.scope.nesting; 
+            } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
+                node.modulePath = modulePath;
+            };
+
+            me.dependencies.add(dep);
         });
 
         requires.remove.apply(requires,toRemove);
@@ -138,14 +133,14 @@ Module.prototype = {
 
         return me.dependencies.each(function(dep){
             var modulePath = dep.modulePath,
-                module = me.factory.getMap().find(modulePath),
+                module = me.pkg.getMap().find(modulePath),
                 result;
 
             if (!fs.statSync(modulePath).isFile()) {
-                throw new Error('Invalid require path "' + modulePath + '".');
+                throw new Error(printf(CONSTANTS.ERRORS.MODULE_LOAD,'modulePath',modulePath));
             }
 
-            if (!me.factory.getMap().isCyclic()) {
+            if (!me.pkg.getMap().isCyclic()) {
                 result = module
                     .parse()
                     .find()
@@ -175,7 +170,7 @@ Module.prototype = {
                 return;
             }
 
-            var module = me.factory.getMap().find(dep.modulePath),
+            var module = me.pkg.getMap().find(dep.modulePath),
                 id = module.getId();
 
             allScopes.each(function(scope){
@@ -217,7 +212,7 @@ Module.prototype = {
                 }
             } else if ($vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
                 var modulePath = node.modulePath,
-                    module = me.factory.getMap().find(modulePath);
+                    module = me.pkg.getMap().find(modulePath);
 
                 $vardef.value = new uglifyjs.AST_SymbolRef({
                     name : module.getId()
@@ -259,7 +254,7 @@ Module.prototype = {
             });
         }
 
-        return me.factory.getParser().toString(me.parsed);
+        return me.pkg.getParser().toString(me.parsed);
     }
 };
 

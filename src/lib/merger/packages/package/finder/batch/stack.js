@@ -7,8 +7,8 @@
  */
 'use strict';
 
-var CONSTANTS = require('./constants'),
-	Generator = require('./generator');
+var CONSTANTS = require('../../../../../constants'),
+	Generator = require('../../../../../generic/generator');
 
 function Stack(){
 	var me = this;

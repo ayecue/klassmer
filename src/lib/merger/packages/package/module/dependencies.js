@@ -7,8 +7,8 @@
  */
 'use strict';
 
-var forEach = require('./forEach'),
-    indexOf = require('./indexOf');
+var forEach = require('../../../../common/forEach'),
+    indexOf = require('../../../../common/indexOf');
 
 function Dependencies(){
     var me = this;
