@@ -1,4 +1,4 @@
-# klassmer v0.3.6
+# klassmer v0.3.7
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -28,6 +28,8 @@ Since `~0.3.2` klassmer automaticly detects if you have choosen a javascript fil
 Since `~0.3.5` optimized certain finder options and loading (so it's faster). I also tried klassmer on react-bootstrap which seems to be working.
 
 Since `~0.3.6` optimized processor for call types.
+
+Since `~0.3.7` removed some unnecessary deps.
 
 
 ## Example:
