@@ -1,4 +1,4 @@
-# klassmer v0.3.5
+# klassmer v0.3.6
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -18,11 +18,16 @@ npm install klassmer
 
 This package will merge your CommonJS project to one file to use it in frontend without any overhead.
 
+
+## Changelog
+
 Since `~0.3.0` there's also an autoloader which also loads external modules. If you don't want to add certain modules you are able to exclude them with the new `excludes` property.
 
 Since `~0.3.2` klassmer automaticly detects if you have choosen a javascript file as source or a package json.
 
-Since `~0.3.5` I optimized certain finder options and loading (so it's faster). I also tried klassmer on react-bootstrap which seems to be working.
+Since `~0.3.5` optimized certain finder options and loading (so it's faster). I also tried klassmer on react-bootstrap which seems to be working.
+
+Since `~0.3.6` optimized processor for call types.
 
 
 ## Example:

@@ -9,7 +9,8 @@
 
 var toArray = require('../../../../common/toArray'),
 	forEach = require('../../../../common/forEach'),
-	from = require('../../../../common/from');
+	from = require('../../../../common/from'),
+	CONSTANTS = require('../../../../constants');
 
 function Processor(type,args){
 	var me = this;
@@ -20,23 +21,6 @@ function Processor(type,args){
 }
 
 Processor.opts = {
-	either : function(properties,node,batch){
-		var me = this;
-
-		forEach(from(properties),function(_,property){
-			if (node[property]) {
-				var values = from(node[property]);
-
-				if (values.length > 0) {
-					batch.evaluate(node,property);
-					forEach(values,function(_,v){
-						me.findQueue(v,batch);
-					});
-					this.skip = true;
-				}
-			}
-		});
-	},
 	single : function(properties,node,batch){
 		var me = this;
 
@@ -55,6 +39,25 @@ Processor.opts = {
 				var values = from(node[property]);
 
 				batch.evaluate(node,property);
+				forEach(values,function(_,v){
+					me.findQueue(v,batch);
+				});
+			}
+		});
+	},
+	advanced : function(checkProperties,loopProperties,node,batch){
+		var me = this;
+
+		forEach(from(checkProperties),function(_,property){
+			if (node[property]) {
+				batch.evaluate(node,property);
+			}
+		});
+
+		forEach(from(loopProperties),function(_,property){
+			if (node[property]) {
+				var values = from(node[property]);
+
 				forEach(values,function(_,v){
 					me.findQueue(v,batch);
 				});

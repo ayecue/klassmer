@@ -1,6 +1,6 @@
 {
   "name": "klassmer",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "CommonJS merger for browser version.",
   "main": "src/klassmer.js",
   "homepage": "https://github.com/ayecue/klassmer",
