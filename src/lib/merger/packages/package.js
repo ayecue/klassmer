@@ -8,10 +8,12 @@
 'use strict';
 
 var fs = require('fs'),
+
     Autoloader = require('./package/autoloader'),
     Module = require('./package/module'),
     finder = require('./package/finder'),
     JSON2 = require('JSON2'),
+    $Map = require('./package/map'),
     CONSTANTS = require('../../constants');
 
 function Package(scope,options){
@@ -19,8 +21,11 @@ function Package(scope,options){
 
     me.scope = scope;
     me.options = options || {};
+    me.map = new $Map();
     me.autoloader = new Autoloader(me,scope.getConfig().excludes);
-    me.main = me.add(me.get('main'),me.get('name'));
+    me.main = me.try(me.get('main'),me.get('name'));
+
+    scope.addToMap(me);
 }
 
 Package.read = function(packagePath){
@@ -40,7 +45,7 @@ Package.prototype = {
         return this.scope;
     },
     getMap : function(){
-        return this.scope.getMap();
+        return this.map;
     },
     getGenerator : function(){
         return this.scope.getGenerator();
@@ -51,8 +56,24 @@ Package.prototype = {
     getAutoloader : function(){
         return this.autoloader;
     },
-    add : function(modulePath,name){
-        return this.getMap().find(modulePath) || new Module(modulePath,name,this);
+    findPackage : function(name){
+        return this.scope.findPackage(name);
+    },
+    addToMap : function(module){
+        this.map.add(module);
+        return this;
+    },
+    findModule : function(modulePath){
+        return this.scope.findModule(modulePath);
+    },
+    allModules : function(){
+        return this.map.all();
+    },
+    try : function(modulePath,name){
+        return this.getScope().getMap().findModule(modulePath) || this.create(modulePath,name);
+    },
+    create : function(modulePath,name){
+        return new Module(modulePath,name,this);
     },
     get : function(property){
         return this.options[property];

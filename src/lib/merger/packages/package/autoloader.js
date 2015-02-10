@@ -44,15 +44,15 @@ Autoloader.prototype = {
         var file = path.join(dir,manipulator.extension(module));
 
         if (me.existFile(file)) {
-            return me.pkg.add(file);
+            return me.pkg.try(file);
         }
 
         var nodeModule = path.resolve(dir,path.join('node_modules',module));
 
         if (me.existDirectory(nodeModule)) {
-            var pkg = me.pkg.getScope().add(path.join(nodeModule,'package.json'));
+            var pkg = me.pkg.getScope().try(path.join(nodeModule,'package.json'));
 
-            return pkg.add(pkg.get('main'));
+            return pkg.try(pkg.get('main'));
         }
     },
     wizard : function(module,current){
@@ -97,9 +97,9 @@ Autoloader.prototype = {
             if (target.charAt(1) === '.') {
                 dir = manipulator.removeLastDirectory(dir);
 
-                module = me.pkg.add(manipulator.extension(manipulator.relativeUp(target,dir)));
+                module = me.pkg.try(manipulator.extension(manipulator.relativeUp(target,dir)));
             } else {
-                module = me.pkg.add(manipulator.extension(manipulator.relative(target,dir)));
+                module = me.pkg.try(manipulator.extension(manipulator.relative(target,dir)));
             }
 
             if (!module) {

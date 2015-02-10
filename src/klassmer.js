@@ -42,7 +42,7 @@ module.exports = {
                 });
 
             merger.getListener().on('load',function(main,map){
-                console.info(("Merging " + map.size() + " files...").grey.italic);
+                console.info(("Merging " + map.all().length + " files...").grey.italic);
             });
 
             merger.write();

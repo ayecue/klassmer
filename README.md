@@ -1,4 +1,4 @@
-# klassmer v0.3.7
+# klassmer v0.3.8
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -30,6 +30,8 @@ Since `~0.3.5` optimized certain finder options and loading (so it's faster). I 
 Since `~0.3.6` optimized processor for call types.
 
 Since `~0.3.7` removed some unnecessary deps.
+
+Since `~0.3.8` improved logic of package mapping. Merging is abit slower now since cyclic checking is more complex. In the next release I'll try to improved speed again.
 
 
 ## Example:

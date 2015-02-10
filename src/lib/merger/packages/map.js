@@ -9,6 +9,7 @@
 
 var forEach = require('../../common/forEach'),
     indexOf = require('../../common/indexOf'),
+    ModuleMap = require('./package/map'),
     CONSTANTS = require('../../constants');
 
 function Map(){
@@ -17,16 +18,16 @@ function Map(){
 
 Map.prototype = {
     self : Map,
-    indexOf : function(modulePath){
+    indexOf : function(name){
         var me = this;
 
-        return indexOf(me.collection,function(module){
-            return module.getModulePath() === modulePath;
+        return indexOf(me.collection,function(pkg){
+            return pkg.get('name') === name;
         });
     },
-    find : function(modulePath){
+    find : function(name){
         var me = this,
-            idx = me.indexOf(modulePath);
+            idx = me.indexOf(name);
 
         if (idx !== -1) {
             return me.collection[idx];
@@ -34,10 +35,22 @@ Map.prototype = {
 
         return null;
     },
-    add : function(){
+    findModule : function(modulePath){
         var me = this;
 
+        return forEach(me.collection,function(_,pkg){
+            var module = pkg.getMap().find(modulePath);
+
+            if (module) {
+                this.result = module;
+                this.skip = true;
+            }
+        });
+    },
+    add : function(){
+        var me = this;
         me.collection.push.apply(me.collection,arguments);
+        return me;
     },
     set : function(collection){
         var me = this;
@@ -48,10 +61,17 @@ Map.prototype = {
     size : function(){
         return this.collection.length;
     },
+    all : function(){
+        var me = this;
+
+        return forEach(me.collection,function(_,pkg){
+            this.result = this.result.concat(pkg.allModules());
+        },[]);
+    },
     sort : function(){
         var me = this,
             result = [],
-            left = [].concat(me.collection),
+            left = me.all(),
             queue = function(collection){
                 return forEach(collection,function(_,module){
                     var modulePath = module.getModulePath(),
@@ -74,7 +94,7 @@ Map.prototype = {
             left = queue(left);
         }
 
-        return result;
+        return ModuleMap.prototype.add.apply(new ModuleMap(),result);
     },
     each : function(fn,ctx){
         var me = this;
@@ -84,12 +104,13 @@ Map.prototype = {
         },ctx);
     },
     isCyclic: function(){
-        var me = this;
+        var me = this,
+            collection = me.all();
 
-        return forEach(me.collection,function(_,module){
+        return forEach(collection,function(_,module){
             var deps = module.getDependencies(),
                 found = deps.each(function(dep){
-                    var otherModule = me.find(dep.modulePath),
+                    var otherModule = me.findModule(dep.modulePath),
                         otherDeps = otherModule.getDependencies();
 
                     if (otherDeps.find(module.getModulePath())) {

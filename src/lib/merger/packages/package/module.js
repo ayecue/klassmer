@@ -17,6 +17,7 @@ var fs = require('fs'),
     indexOf = require('../../../common/indexOf'),
     Dependencies = require('./module/dependencies'),
     Listener = require('../../../generic/listener'),
+    CJSParser = require('./module/cjsparser'),
     CONSTANTS = require('../../../constants');
 
 function Module(modulePath,name,pkg){
@@ -32,7 +33,7 @@ function Module(modulePath,name,pkg){
     me.batch = null;
     me.loaded = false;
 
-    pkg.getMap().add(me);
+    pkg.addToMap(me);
 }
 
 Module.prototype = {
@@ -98,39 +99,11 @@ Module.prototype = {
         }]);
 
         var requires = me.batch.get(CONSTANTS.FINDER.REQUIRES),
-            toRemove = [];
+            deps = CJSParser.findRequires(requires,function(to){
+                return me.pkg.getAutoloader().get(me.modulePath,to);
+            });
 
-        requires.each(function(node){
-            if (!node.args[0]) {
-                return;
-            }
-
-            var module = me.pkg.getAutoloader().get(me.modulePath,node.args[0].value);
-
-            if (!module) {
-                return toRemove.push(node);
-            }
-
-            var modulePath = module.getModulePath(),
-                vardef = node.$prev,
-                dep = {
-                    modulePath : modulePath,
-                    node : node
-                };
-
-            if (vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
-                dep.name = node.$prev.name.name;
-                dep.nesting = node.expression.scope.nesting; 
-            } else if (vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
-                node.modulePath = modulePath;
-            } else if (vardef.TYPE === CONSTANTS.TYPES.ASSIGN) {
-                node.modulePath = modulePath;
-            }
-
-            me.dependencies.add(dep);
-        });
-
-        requires.remove.apply(requires,toRemove);
+        me.dependencies.add.apply(me.dependencies,deps);
         me.listener.fire('find',me,[me.batch]);
 
         return me;
@@ -146,14 +119,14 @@ Module.prototype = {
 
         return me.loaded = me.dependencies.each(function(dep){
             var modulePath = dep.modulePath,
-                module = me.pkg.getMap().find(modulePath),
+                module = me.pkg.findModule(modulePath),
                 result;
 
             if (!fs.statSync(modulePath).isFile()) {
                 throw new Error(printf(CONSTANTS.ERRORS.MODULE_LOAD,'modulePath',modulePath));
             }
 
-            if (!me.pkg.getMap().isCyclic()) {
+            if (!me.pkg.getScope().getMap().isCyclic()) {
                 result = module
                     .parse()
                     .find()
@@ -183,95 +156,22 @@ Module.prototype = {
                 return;
             }
 
-            var module = me.pkg.getMap().find(dep.modulePath),
-                id = module.getId();
+            var module = me.pkg.findModule(dep.modulePath);
 
-            allScopes.each(function(scope){
-                var variable = scope.find_variable(dep.name);
-
-                if (variable) {
-                    variable.name = id;
-                }
-            });
+            CJSParser.replaceVariables(allScopes,dep.name,module.getId());
         });
 
         /**
          *  Remove require vardefs
          */
-        requires.each(function(node){
-            var $vardef = node.$prev;
-
-            if ($vardef.TYPE === CONSTANTS.TYPES.VAR_DEF) {
-                var $var = $vardef.$prev,
-                    definitions = $var.definitions,
-                    key = indexOf(definitions,function(def){
-                        return def.name.name === $vardef.name.name;
-                    });
-
-                if (key !== -1) {
-                    definitions.splice(key,1);
-                }
-
-                if (definitions.length === 0) {
-                    var $scope = $var.$prev,
-                        index = indexOf($scope.body,function(expression){
-                            return expression && expression.TYPE === CONSTANTS.TYPES.VAR && expression.id === $var.id;
-                        });
-
-                    if (index !== -1) {
-                        $scope.body[index] = null;
-                        delete $scope.body[index];
-                    }
-                }
-            } else if ($vardef.TYPE === CONSTANTS.TYPES.OBJECT_KEY_VAL) {
-                var modulePath = node.modulePath,
-                    module = me.pkg.getMap().find(modulePath);
-
-                $vardef.value = new uglifyjs.AST_SymbolRef({
-                    name : module.getId()
-                });
-            } else if ($vardef.TYPE === CONSTANTS.TYPES.ASSIGN) {
-                var modulePath = node.modulePath,
-                    module = me.pkg.getMap().find(modulePath);
-
-                $vardef.right = new uglifyjs.AST_SymbolRef({
-                    name : module.getId()
-                });
-            }
+        CJSParser.removeRequires(requires,function(modulePath){
+            return me.pkg.findModule(modulePath);
         });
 
         if (exports.isEmpty()) {
-            moduleExport.each(function(node){
-                var $scope = node.$prev,
-                    key = indexOf($scope.body,function(expression){
-                        return expression && expression.TYPE === CONSTANTS.TYPES.SIMPLE_STATEMENT && expression.id === node.id;
-                    });
-
-                if (key !== -1) {
-                    $scope.body[key] = new uglifyjs.AST_Return({
-                        value : node.body.right
-                    });
-                }
-            });
+            CJSParser.replaceModuleExport(moduleExport);
         } else {
-            mainScope.each(function(scope){
-                var arg = new uglifyjs.AST_Object({
-                    properties : []
-                    }),
-                    argName = new uglifyjs.AST_SymbolFunarg({
-                        name : "exports"
-                    }),
-                    symbolRef = new uglifyjs.AST_SymbolRef({
-                        name : "exports"
-                    }),
-                    bodyReturn = new uglifyjs.AST_Return({
-                        value : symbolRef
-                    });
-
-                scope.args.push(arg);
-                scope.expression.argnames.push(argName);
-                scope.expression.body.push(bodyReturn);
-            });
+            CJSParser.injectExportVariable(mainScope);
         }
 
         me.listener.fire('compile',me,[me.parsed]);

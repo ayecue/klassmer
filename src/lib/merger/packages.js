@@ -27,7 +27,7 @@ function Packages(config){
 	me.generator = new Generator(CONSTANTS.GENERATOR.MODULE);
 	me.listener = new Listener();
 	me.map = new $Map();
-	me.main = me.add(config.getSource(),config.getNamespace());
+	me.main = me.try(config.getSource(),config.getNamespace());
 }
 
 Packages.prototype = {
@@ -47,7 +47,17 @@ Packages.prototype = {
 	getListener : function(){
         return this.listener;
     },
-	add : function(src,name){
+    addToMap : function(module){
+        this.map.add(module);
+        return this;
+    },
+    findPackage : function(name){
+    	return this.map.find(name);
+    },
+    findModule : function(modulePath){
+    	return this.map.findModule(modulePath);
+    },
+	try : function(src,name){
 		var me = this,
 			basename = path.basename(src),
 			options = {
@@ -66,12 +76,13 @@ Packages.prototype = {
 			options.name = name || options.name;
 		}
 
-		return new Package(me,options);
+		return me.map.find(options.name) || me.create(options);
+	},
+	create : function(options){
+		return new Package(this,options);
 	},
 	sort : function(){
-		var me = this;
-        me.map.set(me.map.sort());
-        return me;
+        return this.map.sort();
     },
 	toString : function(){
 		var me = this,
@@ -83,14 +94,14 @@ Packages.prototype = {
 		me.main.load();
 		me.listener.fire('load',me,[me.main,me.map]);
 
-		me.sort();
-		me.listener.fire('sort',me,[me.main,me.map]);
+		var sorted = me.sort();
+		me.listener.fire('sort',me,[me.main,sorted]);
 
 		return [
             me.parser.process(me.parser.getStart(),{
                 namespace : me.main.get('name')
             }),
-            me.map.each(function(module){
+            sorted.each(function(module){
 	            this.result.push(module.compile());
 	        },[]).join(seperator),
             me.parser.process(me.parser.getEnd(),{
