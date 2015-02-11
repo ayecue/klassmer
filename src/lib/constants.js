@@ -46,7 +46,7 @@ exports.GENERATOR = {
 	MODULE : "module_"
 };
 
-exports.FINDER = {
+exports.CJS_COMPILER = {
 	MAIN_SCOPE : 0,
 	ALL_SCOPES : 1,
 	REQUIRES : 2,
@@ -73,7 +73,8 @@ exports.DEFAULTS = {
 	OPTIMIZER : {
         beautify : true,
         comments : true
-    }
+    },
+    COMPILER : 'CJSCompiler'
 };
 
 exports.ERRORS = {
@@ -85,10 +86,12 @@ exports.ERRORS = {
 	CONFIG_START_FILE : 'Invalid wrap.startFile option. Not a file.',
 	CONFIG_END_FILE : 'Invalid wrap.endFile option. Not a file.',
 	CONFIG_OPTIMIZER : 'Invalid optimizer options.',
+	CONFIG_COMPILER : 'Invalid compiler options.',
 	MAP_IS_CYCLIC : 'Dependency map is cyclic.',
 	AUTOLOADER_GET_FILE : 'Cannot find file: <%= file %>',
 	AUTOLOADER_GET_MODULE : 'Cannot find file: <%= module %>',
 	MODULE_LOAD : 'Invalid require path "<%= modulePath %>".',
 	PARSER_PARSE : 'Error while parsing <%= file %>.',
-	PACKAGES_ADD : 'Main package option is not defined in <%= src %>.'
+	PACKAGES_ADD : 'Main package option is not defined in <%= src %>.',
+	COMPILER_GET : 'Compiler type with the name <%= name %> not found.'
 };

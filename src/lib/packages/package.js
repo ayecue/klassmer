@@ -14,7 +14,7 @@ var fs = require('fs'),
     finder = require('./package/finder'),
     JSON2 = require('JSON2'),
     $Map = require('./package/map'),
-    CONSTANTS = require('../../constants');
+    CONSTANTS = require('../constants');
 
 function Package(scope,options){
 	var me = this;
@@ -53,6 +53,9 @@ Package.prototype = {
     getParser : function(){
         return this.scope.getParser();
     },
+    getCompiler : function(){
+        return this.scope.getCompiler();
+    },
     getAutoloader : function(){
         return this.autoloader;
     },
@@ -73,7 +76,10 @@ Package.prototype = {
         return this.getScope().getMap().findModule(modulePath) || this.create(modulePath,name);
     },
     create : function(modulePath,name){
-        return new Module(modulePath,name,this);
+        var me = this,
+            module = new Module(modulePath,name,me);
+        me.scope.getCompiler().register(module);
+        return module;
     },
     get : function(property){
         return this.options[property];

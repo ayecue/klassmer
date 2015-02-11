@@ -7,6 +7,8 @@
  */
 'use strict';
 
+var indexOf = require('../common/indexOf');
+
 /**
  *	Micro Listener Object
  */
@@ -21,10 +23,13 @@ Listener.prototype = {
 	/**
 	 *	Register event
 	 */
-	on : function(name,fn){
+	on : function(name,fn,scope){
 		var self = this;
 		self.pool[name] = self.pool[name] || [];
-		self.pool[name].push(fn);
+		self.pool[name].push({
+			callback : fn,
+			scope : scope
+		});
 		return self;
 	},
 	/**
@@ -34,7 +39,8 @@ Listener.prototype = {
 		var self = this;
 		if (name in self.pool) {
 			for (var index = 0, length = self.pool[name].length; index < length;) {
-				self.pool[name][index++].apply(ctx,args);
+				var current = self.pool[name][index++];
+				current.callback.apply(current.scope || ctx,args);
 			}
 		}
 		return self;
@@ -45,7 +51,9 @@ Listener.prototype = {
 	off : function(name,fn){
 		var self = this;
 		if (name in self.pool){
-			var index = self.pool[name].indexOf(fn);
+			var index = indexOf(self.pool[name],function(_){
+				return fn == _.callback;
+			});
 			if (index !== -1) {
 				self.pool[name].splice(index,1);
 			}

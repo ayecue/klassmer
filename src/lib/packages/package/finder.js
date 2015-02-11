@@ -9,10 +9,10 @@
 
 var uglifyjs = require('uglify-js'),
 	Batch = require('./finder/batch'),
-	from = require('../../../common/from'),
-	forEach = require('../../../common/forEach'),
+	from = require('../../common/from'),
+	forEach = require('../../common/forEach'),
 	Processor = require('./finder/processor'),
-	CONSTANTS = require('../../../constants');
+	CONSTANTS = require('../../constants');
 
 function Finder(){
 }

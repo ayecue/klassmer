@@ -7,9 +7,9 @@
  */
 'use strict';
 
-var forEach = require('../../common/forEach'),
-	typeOf = require('../../common/typeOf'),
-	namespace = require('../../common/namespace');
+var forEach = require('../common/forEach'),
+	typeOf = require('../common/typeOf'),
+	namespace = require('../common/namespace');
 
 function Validator(config){
     var me = this;

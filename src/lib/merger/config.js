@@ -11,7 +11,7 @@ var fs = require('fs'),
     typeOf = require('../common/typeOf'),
     extend = require('../common/extend'),
     toArray = require('../common/toArray'),
-    Validator = require('./config/validator'),
+    Validator = require('../generic/validator'),
     CONSTANTS = require('../constants');
 
 function Config(options){
@@ -72,6 +72,13 @@ Config.prototype = {
     getSeparator : function(){
         return this.separator;
     },
+    setCompiler : function(compiler){
+        this.compiler = compiler;
+        return this;
+    },
+    getCompiler : function(){
+        return this.compiler;
+    },
     validate : function(){
         var me = this,
             validator = new Validator(me);
@@ -116,6 +123,9 @@ Config.prototype = {
             .add('optimizer',function(v){
                 return !!v;
             },CONSTANTS.ERRORS.CONFIG_OPTIMIZER)
+            .add('compiler',function(v){
+                return !!v;
+            },CONSTANTS.ERRORS.CONFIG_COMPILER)
             .evaluate();
 
         return me;

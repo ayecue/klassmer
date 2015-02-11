@@ -7,10 +7,10 @@
  */
 'use strict';
 
-var toArray = require('../../../../common/toArray'),
-	forEach = require('../../../../common/forEach'),
-	from = require('../../../../common/from'),
-	CONSTANTS = require('../../../../constants');
+var toArray = require('../../../common/toArray'),
+	forEach = require('../../../common/forEach'),
+	from = require('../../../common/from'),
+	CONSTANTS = require('../../../constants');
 
 function Processor(type,args){
 	var me = this;

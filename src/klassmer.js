@@ -20,7 +20,8 @@ module.exports = {
     extend : require('./lib/common/extend'),
     printf : require('./lib/common/printf'),
     Merger : require('./lib/merger'),
-    run : function(options){
+    Info : require('./lib/info'),
+    merge : function(options){
         try {
             var merger = new this.Merger({
                     separator: options.separator || CONSTANTS.DEFAULTS.SEPARATOR,
@@ -38,6 +39,7 @@ module.exports = {
                     excludes: options.excludes,
                     src: options.source,
                     out: options.output,
+                    compiler : options.compiler || CONSTANTS.DEFAULTS.COMPILER,
                     optimizer: options.optimizer || CONSTANTS.DEFAULTS.OPTIMIZER
                 });
 
@@ -51,6 +53,22 @@ module.exports = {
         } catch (e) {
             console.info(e.message.red.italic);
             console.info("Merging failed...FAIL".red.bold);
+        }
+    },
+    info : function(options){
+        try {
+            var info = new this.Info({
+                    excludes: options.excludes,
+                    src: options.source,
+                    out: options.output
+                });
+
+            info.print();
+
+            console.info("Information output complete...OK".green.bold);
+        } catch (e) {
+            console.info(e.message.red.italic);
+            console.info("Information output failed...FAIL".red.bold);
         }
     }
 };

@@ -8,8 +8,8 @@
 'use strict';
 
 var Stack = require('./batch/stack'),
-    forEach = require('../../../../common/forEach'),
-    from = require('../../../../common/from'),
+    forEach = require('../../../common/forEach'),
+    from = require('../../../common/from'),
     Selector = require('./batch/selector');
 
 function Batch(selectors){

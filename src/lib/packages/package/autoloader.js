@@ -9,12 +9,12 @@
 
 var fs = require('fs'),
     path = require('path'),
-    printf = require('../../../common/printf'),
-    forEach = require('../../../common/forEach'),
-    from = require('../../../common/from'),
+    printf = require('../../common/printf'),
+    forEach = require('../../common/forEach'),
+    from = require('../../common/from'),
     manipulator = require('./manipulator'),
     Package = require('../package'),
-    CONSTANTS = require('../../../constants');
+    CONSTANTS = require('../../constants');
 
 function Autoloader(pkg,excludes){
     var me = this;

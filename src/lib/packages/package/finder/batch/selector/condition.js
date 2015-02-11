@@ -7,7 +7,7 @@
  */
 'use strict';
 
-var forEach = require('../../../../../../common/forEach');
+var forEach = require('../../../../../common/forEach');
 
 function Condition(namespace,value){
 	var me = this;

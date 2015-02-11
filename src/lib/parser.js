@@ -8,9 +8,9 @@
 'use strict';
 
 var fs = require('fs'),
-	printf = require('../common/printf'),
+	printf = require('./common/printf'),
 	uglifyjs = require('uglify-js'),
-	CONSTANTS = require('../constants');
+	CONSTANTS = require('./constants');
 
 function Parser(config){
 	var me = this;

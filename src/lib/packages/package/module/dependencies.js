@@ -8,21 +8,31 @@
 'use strict';
 
 var forEach = require('../../../common/forEach'),
-    indexOf = require('../../../common/indexOf'),
-    CONSTANTS = require('../../../constants');
+    indexOf = require('../../../common/indexOf');
 
-function Map(){
-    this.collection = [];
+function Dependencies(){
+    var me = this;
+
+    me.collection = [];
 }
 
-Map.prototype = {
-    self : Map,
+Dependencies.prototype = {
+    self : Dependencies,
     indexOf : function(modulePath){
         var me = this;
 
         return indexOf(me.collection,function(module){
-            return module.getModulePath() === modulePath;
+            return module.modulePath === modulePath;
         });
+    },
+    findAll : function(modulePath){
+        var me = this;
+
+        return forEach(me.collection,function(_,module){
+            if (module.modulePath === modulePath) {
+                this.result.push(module);
+            }
+        },[]);
     },
     find : function(modulePath){
         var me = this,
@@ -35,21 +45,9 @@ Map.prototype = {
         return null;
     },
     add : function(){
-        var me = this
-        me.collection.push.apply(me.collection,arguments);
-        return me;
-    },
-    all : function(){
-        return [].concat(this.collection);
-    },
-    set : function(collection){
         var me = this;
 
-        me.collection = collection;
-        return me;
-    },
-    size : function(){
-        return this.collection.length;
+        me.collection.push.apply(me.collection,arguments);
     },
     each : function(fn,ctx){
         var me = this;
@@ -57,10 +55,7 @@ Map.prototype = {
         return forEach(me.collection,function(_,module){
             fn.call(this,module);
         },ctx);
-    },
-    clear : function(){
-        this.collection = [];
     }
 };
 
-module.exports = Map;
+module.exports = Dependencies;

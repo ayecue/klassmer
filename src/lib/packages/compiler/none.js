@@ -8,10 +8,7 @@
 'use strict';
 
 var fs = require('fs'),
-    path = require('path'),
-    mkdirp = require('mkdirp');
+    Factory = require('./factory'),
+    CONSTANTS = require('../../constants');
 
-module.exports = function(file, contents) {
-	mkdirp.sync(path.dirname(file));
-	fs.writeFileSync(file,contents);
-};
+module.exports = Factory({});

@@ -7,10 +7,10 @@
  */
 'use strict';
 
-var forEach = require('../../common/forEach'),
-    indexOf = require('../../common/indexOf'),
+var forEach = require('../common/forEach'),
+    indexOf = require('../common/indexOf'),
     ModuleMap = require('./package/map'),
-    CONSTANTS = require('../../constants');
+    CONSTANTS = require('../constants');
 
 function Map(){
     this.collection = [];
@@ -103,24 +103,15 @@ Map.prototype = {
             fn.call(this,module);
         },ctx);
     },
-    isCyclic: function(){
-        var me = this,
-            collection = me.all();
+    isCyclic: function(module){
+        var me = this;
 
-        return forEach(collection,function(_,module){
-            var deps = module.getDependencies(),
-                found = deps.each(function(dep){
-                    var otherModule = me.findModule(dep.modulePath),
-                        otherDeps = otherModule.getDependencies();
+        return module.getDependencies().each(function(dep){
+            var otherModule = me.findModule(dep.modulePath),
+                otherDeps = otherModule.getDependencies();
 
-                    if (otherDeps.find(module.getModulePath())) {
-                        throw new Error(CONSTANTS.ERRORS.MAP_IS_CYCLIC);
-                    }
-                },false);
-
-            if (found) {
-                this.result = true;
-                this.skip = true;
+            if (otherDeps.find(module.getModulePath())) {
+                throw new Error(CONSTANTS.ERRORS.MAP_IS_CYCLIC);
             }
         },false);
     },

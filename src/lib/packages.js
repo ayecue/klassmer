@@ -8,16 +8,17 @@
 'use strict';
 
 var path = require('path'),
-	printf = require('../common/printf'),
-	Listener = require('../generic/listener'),
-	extend = require('../common/extend'),
-	forEach = require('../common/forEach'),
+	printf = require('./common/printf'),
+	Listener = require('./generic/listener'),
+	extend = require('./common/extend'),
+	forEach = require('./common/forEach'),
 	manipulator = require('./packages/package/manipulator'),
 	Package = require('./packages/package'),
 	Parser = require('./parser'),
 	$Map = require('./packages/map'),
-	Generator = require('../generic/generator'),
-	CONSTANTS = require('../constants');
+	Compiler = require('./packages/compiler'),
+	Generator = require('./generic/generator'),
+	CONSTANTS = require('./constants');
 
 function Packages(config){
 	var me = this;
@@ -27,6 +28,7 @@ function Packages(config){
 	me.generator = new Generator(CONSTANTS.GENERATOR.MODULE);
 	me.listener = new Listener();
 	me.map = new $Map();
+	me.compiler = new Compiler(config.getCompiler());
 	me.main = me.try(config.getSource(),config.getNamespace());
 }
 
@@ -46,6 +48,9 @@ Packages.prototype = {
 	},
 	getListener : function(){
         return this.listener;
+    },
+    getCompiler : function(){
+    	return this.compiler;
     },
     addToMap : function(module){
         this.map.add(module);
@@ -81,21 +86,35 @@ Packages.prototype = {
 	create : function(options){
 		return new Package(this,options);
 	},
+	find : function(){
+		var me = this;
+
+		me.main.find();
+		me.listener.fire('find',me,[me.main,me.map]);
+		return me;
+	},
+	load : function(){
+		var me = this;
+
+		me.main.load();
+		me.listener.fire('load',me,[me.main,me.map]);
+		return me;
+	},
 	sort : function(){
-        return this.map.sort();
+		var me = this,
+			sorted = me.map.sort();
+
+		me.listener.fire('sort',me,[me.main,sorted]);
+        return sorted;
     },
 	toString : function(){
 		var me = this,
 			seperator = me.parser.getOptimizer().beautify ? me.parser.getSeparator() : '';
 
-		me.main.find();
-		me.listener.fire('find',me,[me.main,me.map]);
-
-		me.main.load();
-		me.listener.fire('load',me,[me.main,me.map]);
+		me.find();
+		me.load();
 
 		var sorted = me.sort();
-		me.listener.fire('sort',me,[me.main,sorted]);
 
 		return [
             me.parser.process(me.parser.getStart(),{

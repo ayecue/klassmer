@@ -9,10 +9,10 @@
 
 var Listener = require('./generic/listener'),
     Packages = require('./packages'),
-    Config = require('./merger/config'),
+    Config = require('./info/config'),
     writeFile = require('./common/writeFile');
 
-function Merger(options){
+function Info(options){
 	var me = this;
 
     me.config = new Config(options).validate();
@@ -22,8 +22,8 @@ function Merger(options){
     me.initEvents();
 }
 
-Merger.prototype = {
-	self : Merger,
+Info.prototype = {
+	self : Info,
     getListener : function(){
         return this.listener;
     },
@@ -41,12 +41,16 @@ Merger.prototype = {
                 me.listener.fire('sort',me,arguments);
             });
     },
-    write : function(){
-        var me = this,
-            output = me.packages.toString();
+    print : function(){
+        var me = this;
 
-        return writeFile(me.config.getOutput(),output);
+        me.packages.find().load();
+
+        var map = me.packges.getMap();
+
+        debugger;
+        debugger;
     }
 };
 
-module.exports = Merger;
+module.exports = Info;

@@ -1,4 +1,4 @@
-# klassmer v0.3.8
+# klassmer v0.3.9
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS projects for your browser.
@@ -31,7 +31,9 @@ Since `~0.3.6` optimized processor for call types.
 
 Since `~0.3.7` removed some unnecessary deps.
 
-Since `~0.3.8` improved logic of package mapping. Merging is abit slower now since cyclic checking is more complex. In the next release I'll try to improved speed again.
+Since `~0.3.8` improved logic of package mapping. Merging is abit slower now since cyclic checking is more complex. In the next release I'll try to improve speed again.
+
+Since `~0.3.9` you can select which compiler you want to use (right now there's just one for CommonJS). Also the speed of the cyclic check is now faster.
 
 
 ## Example:
@@ -93,6 +95,10 @@ Seperator between all modules.
 #### -x, --excludes (optional)
 Type: `String`
 Ignore certain required modules.
+
+#### -c, --compiler (optional)
+Type: `String`
+Compiler which will go through the modules.
 
 
 ## Functions

@@ -7,7 +7,7 @@
  */
 'use strict';
 
-var CONSTANTS = require('../../../constants');
+var CONSTANTS = require('../../constants');
 
 function Manipulator(){
 }
