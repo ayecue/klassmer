@@ -21,15 +21,16 @@ module.exports = {
     printf : require('./lib/common/printf'),
     Merger : require('./lib/merger'),
     Info : require('./lib/info'),
+    Klass : require('./lib/klass'),
     merge : function(options){
         try {
-            var merger = new this.Merger({
-                    separator: options.separator || CONSTANTS.DEFAULTS.SEPARATOR,
-                    namespace: options.namespace || CONSTANTS.DEFAULTS.NAMESPACE,
+            var merger = new this.Merger(options.type,{
+                    separator: options.separator,
+                    namespace: options.namespace,
                     wrapper: {
-                        module: options.module || CONSTANTS.DEFAULTS.MODULE,
-                        start: options.start || CONSTANTS.DEFAULTS.START,
-                        end: options.end || CONSTANTS.DEFAULTS.END
+                        module: options.module,
+                        start: options.start,
+                        end: options.end
                     },
                     wrap: {
                         moduleFile: options.moduleFile,
@@ -37,13 +38,13 @@ module.exports = {
                         endFile: options.endFile
                     },
                     excludes: options.excludes,
-                    src: options.source,
-                    out: options.output,
-                    compiler : options.compiler || CONSTANTS.DEFAULTS.COMPILER,
-                    optimizer: options.optimizer || CONSTANTS.DEFAULTS.OPTIMIZER
+                    source: options.source,
+                    output: options.output,
+                    compiler : options.compiler,
+                    optimizer: options.optimizer
                 });
 
-            merger.getListener().on('load',function(main,map){
+            merger.on('load',function(main,map){
                 console.info(("Merging " + map.all().length + " files...").grey.italic);
             });
 
@@ -56,19 +57,20 @@ module.exports = {
         }
     },
     info : function(options){
-        try {
-            var info = new this.Info({
+       // try {
+            var info = new this.Info(options.type,{
                     excludes: options.excludes,
-                    src: options.source,
-                    out: options.output
+                    source: options.source,
+                    output: options.output,
+                    compiler : options.compiler
                 });
 
             info.print();
 
             console.info("Information output complete...OK".green.bold);
-        } catch (e) {
-            console.info(e.message.red.italic);
-            console.info("Information output failed...FAIL".red.bold);
-        }
+        //} catch (e) {
+        //    console.info(e.message.red.italic);
+        //    console.info("Information output failed...FAIL".red.bold);
+        //}
     }
 };

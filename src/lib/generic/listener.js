@@ -7,19 +7,11 @@
  */
 'use strict';
 
-var indexOf = require('../common/indexOf');
+var Klass = require('../klass'),
+	indexOf = require('../common/indexOf');
 
-/**
- *	Micro Listener Object
- */
-function Listener(){
-	this.pool = {};
-}
-
-/**
- *	Extend prototypes
- */
-Listener.prototype = {
+Klass.define('generic.Listener',{
+	pool : {},
 	/**
 	 *	Register event
 	 */
@@ -60,6 +52,6 @@ Listener.prototype = {
 		}
 		return self;
 	}
-};
+});
 
-module.exports = Listener;
+module.exports = Klass.get('generic.Listener');

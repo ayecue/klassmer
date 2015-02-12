@@ -7,11 +7,4 @@
  */
 'use strict';
 
-var typeOf = require('./typeOf');
-
-module.exports = function(values){
-	if (typeOf(values) === "array") {
-        return values;
-    }
-    return [values];
-};
+module.exports = {};

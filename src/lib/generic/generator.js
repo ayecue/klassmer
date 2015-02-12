@@ -7,23 +7,22 @@
  */
 'use strict';
 
-var CONSTANTS = require('../constants');
+var Klass = require('../klass'),
+	CONSTANTS = require('../constants');
 
-function Generator(prefix,index){
-	var me = this;
-
-	me.prefix = prefix || CONSTANTS.ID.PREFIX;
-	me.index = index || CONSTANTS.ID.DEFAULT;
-}
-
-Generator.prototype = {
-	self : Generator,
+Klass.define('generic.Generator',{
+	constructor : function(prefix,index){
+		this.extend({
+			prefix : prefix || CONSTANTS.ID.PREFIX,
+			index : index || CONSTANTS.ID.DEFAULT
+		});
+	},
 	get : function(){
 		return this.prefix + (this.index++);
 	},
 	reset : function(){
 		this.index = CONSTANTS.ID.DEFAULT;
 	}
-};
+});
 
-module.exports = Generator;
+module.exports = Klass.get('generic.Generator');

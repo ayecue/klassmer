@@ -7,50 +7,49 @@
  */
 'use strict';
 
-var Listener = require('./generic/listener'),
-    Packages = require('./packages'),
-    Config = require('./info/config'),
-    writeFile = require('./common/writeFile');
+var Klass = require('./klass'),
+    Listener = require('./generic/listener'),
+    Event = require('./traits/event'),
+    Manager = require('./manager'),
+    Layout = require('./layout'),
+    CONSTANTS = require('./constants');
 
-function Info(options){
-	var me = this;
+Klass.define('Info',{
+    traits : [
+        'traits.Event'
+    ],
+    constructor : function(type,options){
+        var me = this;
 
-    me.config = new Config(options).validate();
-    me.packages = new Packages(me.config);
-    me.listener = new Listener();
+        me.extend({
+            listener : new Listener(),
+            options : options,
+            type : type,
+            manager : Manager.get(type,options)
+        });
 
-    me.initEvents();
-}
-
-Info.prototype = {
-	self : Info,
-    getListener : function(){
-        return this.listener;
+        me.initEvents();
     },
     initEvents : function(){
         var me = this;
 
-        me.packages.getListener()
+        me.manager
             .on('find',function(){
-                me.listener.fire('find',me,arguments);
+                me.fire('find',me,arguments);
             })
             .on('load',function(){
-                me.listener.fire('load',me,arguments);
+                me.fire('load',me,arguments);
             })
             .on('sort',function(){
-                me.listener.fire('sort',me,arguments);
+                me.fire('sort',me,arguments);
             });
     },
     print : function(){
-        var me = this;
+        var me = this,
+            map = me.manager.getDependencyMap();
 
-        me.packages.find().load();
-
-        var map = me.packges.getMap();
-
-        debugger;
-        debugger;
+        Layout.draw(me.manager.getOutput(),map);
     }
-};
+});
 
-module.exports = Info;
+module.exports = Klass.get('Info');

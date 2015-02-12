@@ -1,0 +1,22 @@
+#! /usr/bin/env node
+// -*- js -*-
+
+"use strict";
+
+var fs = require('fs'),
+	colors = require('colors'),
+	program = require('commander'),
+	Klassmer = require('../src/klassmer');
+
+function list(v) {
+	return v.split(',');
+}
+ 
+program
+	.option('-f, --source <path>', 'path to main project file (All other files will get loaded automaticly)'.grey.bold)
+	.option('-t, --output <path>', 'path to merged output file'.grey.bold)
+	.option('-x, --excludes <items>', '(optional) ignore certain require statements'.grey.italic, list)
+	.option('-c, --compiler [value]', '(optional) decide which compiler you want to use'.grey.italic)
+	.parse(process.argv);
+
+Klassmer.info(program);

@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title><%= title %></title>
+		<style>
+			<%= style %>
+		</style>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+	</head>
+	<body>
+		<a class="zin" href="#" title="+">+</a>
+        <a class="zout" href="#" title="-">-</a>
+		<div class="main"></div>
+		<script>
+	      var getMap = function(){
+	      	return <%= map %>;
+	      };
+	      <%= code %>
+	    </script>
+	</body>
+</html>

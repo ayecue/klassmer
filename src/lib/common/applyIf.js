@@ -8,25 +8,27 @@
 'use strict';
 
 var forEach = require('./forEach'),
-	toArray = require('./toArray');
+	toArray = require('./toArray'),
+	typeOf = require('./typeOf');
 
-module.exports = function() {
+function applyIf() {
 	var args = toArray(arguments),
-		last = args.length - 1,
-		nil = true,
 		src = args.shift() || {};
-
-	if (typeof args[last] === 'boolean') { 
-		nil = args.pop();
-	}
 	
 	return forEach(args,function(index,item){
 		if (typeof item === 'object') {
 			this.result = forEach(item,function(prop,child){
-				if (!!(nil || (child != null && child.length)) && item.hasOwnProperty(prop)) {
+				var scope = this.result;
+
+				if (typeOf(child) === 'object' && typeOf(scope[prop]) === 'object') {
+					scope[prop] = applyIf(scope[prop],child);
+				} else if (!this.result[prop] || child) {
 					this.result[prop] = child;
 				}
 			},this.result);
 		}
 	},src);
 };
+
+
+module.exports = applyIf;

@@ -7,25 +7,21 @@
  */
 'use strict';
 
-var forEach = require('../common/forEach'),
+var Klass = require('../klass'),
+	forEach = require('../common/forEach'),
 	typeOf = require('../common/typeOf'),
-	namespace = require('../common/namespace');
+	getNs = require('../common/getNs');
 
-function Validator(config){
-    var me = this;
-
-    me.config = config;
-    me.fields = [];
-}
-
-Validator.prototype = {
-	self : Validator,
+Klass.define('generic.Validator',{
+	fields : [],
+	constructor : function(config){
+		this.extend({
+			config : config
+		});
+	},
 	setConfig : function(config){
 		this.config = config;
 		return this;
-	},
-	getConfig : function(){
-		return this.config;
 	},
 	add : function(property,condition,errorMessage,process){
 		var me = this;
@@ -44,7 +40,7 @@ Validator.prototype = {
 
 		return forEach(me.fields,function(_,field){
 			var type = typeOf(field.condition),
-				value = namespace(field.property,me.config);
+				value = getNs(field.property,me.config);
 
 			if (type === 'function') {
 				if (field.condition(value,me.config) === false) {
@@ -59,6 +55,6 @@ Validator.prototype = {
 			}
 		},true);
 	}
-};
+});
 
-module.exports = Validator;
+module.exports = Klass.get('generic.Validator');
