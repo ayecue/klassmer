@@ -8,6 +8,7 @@
 'use strict';
 
 var JSON2 = require('JSON2'),
+    extend = require('../common/extend'),
     indexOf = require('../common/indexOf'),
     forEach = require('../common/forEach'),
     Klass = require('../klass'),
@@ -30,13 +31,13 @@ Klass.define('layout.Tree',{
    	},
     toJSON : function(){
         var me = this,
+            refs = {},
             nodes = forEach(me.collection,function(_,node){
-                this.result.push({
-                    id : node.getId(),
-                    internalId : me.getClass().generator.get(),
-                    links : node.getLinks(),
-                    data : node.getData()
-                });
+                var internalId = me.getClass().generator.get();
+
+                this.result.push(extend(node.getRawData(),{
+                    internalId : internalId
+                }));
             },[]),
             links = forEach(nodes,function(index,node){
                 forEach(node.links,function(_,link){

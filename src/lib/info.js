@@ -48,7 +48,7 @@ Klass.define('Info',{
         var me = this,
             map = me.manager.getDependencyMap();
 
-        Layout.draw(me.manager.getOutput(),map);
+        return Layout.draw(me.manager.getOutput(),map);
     }
 });
 

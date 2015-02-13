@@ -26,7 +26,6 @@ Klass.define('Layout',{
 	},
 	draw : function(output,map){
 		var me = this,
-			dir = path.dirname(output),
 			json = map.toJSON(),
 			template = fs.readFileSync(me.getClass().templatePath,{
                 encoding : CONSTANTS.READ.ENCODING,
@@ -39,16 +38,17 @@ Klass.define('Layout',{
             style = fs.readFileSync(me.getClass().stylePath,{
                 encoding : CONSTANTS.READ.ENCODING,
                 flag : CONSTANTS.READ.FLAG
-            });
+            }),
+            target = path.extname(output) === '.html' ? output : output + '.html';
 
-        var test = printf(template,{
+		writeFile(target,printf(template,{
         	title : 'none',
         	style : style,
         	map : json,
         	code : code
-        });
+        }));
 
-		writeFile(path.join(dir,'visual.html'),test);
+        return target;
 	}
 });
 

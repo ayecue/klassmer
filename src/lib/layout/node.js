@@ -11,12 +11,23 @@ var Klass = require('../klass'),
     CONSTANTS = require('../constants');
 
 Klass.define('layout.Node',{
-    constructor : function(id,links,data){
+    constructor : function(id,text,links,data){
         this.extend({
             id : id || CONSTANTS.LAYOUT.UNKNOWN,
+            text : text,
             links : links,
             data : data
         });
+    },
+    getRawData : function(){
+    	var me = this;
+
+    	return {
+    		id : me.id,
+            text : me.text,
+            links : me.links,
+            data : me.data
+    	};
     }
 })
 

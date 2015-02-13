@@ -106,11 +106,12 @@ Klass.define('manager.commonjs.Packages',{
 
     	return forEach(me.map.all(),function(_,module){
     		var modulePath = module.getModulePath(),
-    			node = new Node(modulePath,module.getDependencies().each(function(dep){
+    			node = new Node(modulePath,path.basename(modulePath),module.getDependencies().each(function(dep){
 					this.result.push(dep.modulePath);
 				},[]),{
-	    			package : module.getPackage().get('name'),
-	    			filename : path.basename(modulePath)
+	    			Package : module.getPackage().get('name'),
+	    			Filename : path.basename(modulePath),
+	    			Source : modulePath
 				});
 
     		this.result.add(node);

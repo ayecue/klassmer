@@ -15,10 +15,12 @@ module.exports = {
     typeOf : require('./lib/common/typeOf'),
     toArray : require('./lib/common/toArray'),
     from : require('./lib/common/from'),
-    Listener : require('./lib/generic/listener'),
     indexOf : require('./lib/common/indexOf'),
     extend : require('./lib/common/extend'),
     printf : require('./lib/common/printf'),
+    getNamespace : require('./lib/common/getNs'),
+    setNamespace : require('./lib/common/regNs'),
+    Listener : require('./lib/generic/listener'),
     Merger : require('./lib/merger'),
     Info : require('./lib/info'),
     Klass : require('./lib/klass'),
@@ -57,7 +59,7 @@ module.exports = {
         }
     },
     info : function(options){
-       // try {
+       try {
             var info = new this.Info(options.type,{
                     excludes: options.excludes,
                     source: options.source,
@@ -65,12 +67,11 @@ module.exports = {
                     compiler : options.compiler
                 });
 
-            info.print();
-
+            console.info(("File " + info.print() + " created...").grey.italic);
             console.info("Information output complete...OK".green.bold);
-        //} catch (e) {
-        //    console.info(e.message.red.italic);
-        //    console.info("Information output failed...FAIL".red.bold);
-        //}
+        } catch (e) {
+            console.info(e.message.red.italic);
+            console.info("Information output failed...FAIL".red.bold);
+        }
     }
 };
