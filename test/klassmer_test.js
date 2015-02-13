@@ -67,7 +67,7 @@ exports.klassmer = {
                 fixture = ['test', 'fixtures', 'expected', _case.path].join('/');
 
             console.info('Run test: ' + fixture);
-            Klassmer.run(_case.options);
+            Klassmer.merge(_case.options);
 
             var actual = fs.readFileSync(temp,{
                     encoding : 'utf8'

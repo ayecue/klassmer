@@ -6,6 +6,7 @@
  * Licensed under the MIT license.
  */
 'use strict';
+
 var typeOf = require('./typeOf');
 
 module.exports = function(values){

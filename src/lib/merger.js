@@ -7,46 +7,49 @@
  */
 'use strict';
 
-var Listener = require('./generic/listener'),
-    Packages = require('./merger/packages'),
-    Config = require('./merger/config'),
-    writeFile = require('./common/writeFile');
+var Klass = require('./klass'),
+    Listener = require('./generic/listener'),
+    Event = require('./traits/event'),
+    Manager = require('./manager'),
+    writeFile = require('./common/writeFile'),
+    CONSTANTS = require('./constants');
 
-function Merger(options){
-	var me = this;
+Klass.define('Merger',{
+    traits : [
+        'traits.Event'
+    ],
+    constructor : function(type,options){
+        var me = this;
 
-    me.config = new Config(options).validate();
-    me.packages = new Packages(me.config);
-    me.listener = new Listener();
+        me.extend({
+            listener : new Listener(),
+            options : options,
+            type : type,
+            manager : Manager.get(type,options)
+        });
 
-    me.initEvents();
-}
-
-Merger.prototype = {
-	self : Merger,
-    getListener : function(){
-        return this.listener;
+        me.initEvents();
     },
     initEvents : function(){
         var me = this;
 
-        me.packages.getListener()
+        me.manager
             .on('find',function(){
-                me.listener.fire('find',me,arguments);
+                me.fire('find',me,arguments);
             })
             .on('load',function(){
-                me.listener.fire('load',me,arguments);
+                me.fire('load',me,arguments);
             })
             .on('sort',function(){
-                me.listener.fire('sort',me,arguments);
+                me.fire('sort',me,arguments);
             });
     },
     write : function(){
         var me = this,
-            output = me.packages.toString();
+            output = me.manager.toString();
 
-        return writeFile(me.config.getOutput(),output);
+        return writeFile(me.manager.getOutput(),output);
     }
-};
+});
 
-module.exports = Merger;
+module.exports = Klass.get('Merger');

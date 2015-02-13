@@ -15,20 +15,24 @@ module.exports = {
     typeOf : require('./lib/common/typeOf'),
     toArray : require('./lib/common/toArray'),
     from : require('./lib/common/from'),
-    Listener : require('./lib/generic/listener'),
     indexOf : require('./lib/common/indexOf'),
     extend : require('./lib/common/extend'),
     printf : require('./lib/common/printf'),
+    getNamespace : require('./lib/common/getNs'),
+    setNamespace : require('./lib/common/regNs'),
+    Listener : require('./lib/generic/listener'),
     Merger : require('./lib/merger'),
-    run : function(options){
+    Info : require('./lib/info'),
+    Klass : require('./lib/klass'),
+    merge : function(options){
         try {
-            var merger = new this.Merger({
-                    separator: options.separator || CONSTANTS.DEFAULTS.SEPARATOR,
-                    namespace: options.namespace || CONSTANTS.DEFAULTS.NAMESPACE,
+            var merger = new this.Merger(options.type,{
+                    separator: options.separator,
+                    namespace: options.namespace,
                     wrapper: {
-                        module: options.module || CONSTANTS.DEFAULTS.MODULE,
-                        start: options.start || CONSTANTS.DEFAULTS.START,
-                        end: options.end || CONSTANTS.DEFAULTS.END
+                        module: options.module,
+                        start: options.start,
+                        end: options.end
                     },
                     wrap: {
                         moduleFile: options.moduleFile,
@@ -36,12 +40,13 @@ module.exports = {
                         endFile: options.endFile
                     },
                     excludes: options.excludes,
-                    src: options.source,
-                    out: options.output,
-                    optimizer: options.optimizer || CONSTANTS.DEFAULTS.OPTIMIZER
+                    source: options.source,
+                    output: options.output,
+                    compiler : options.compiler,
+                    optimizer: options.optimizer
                 });
 
-            merger.getListener().on('load',function(main,map){
+            merger.on('load',function(main,map){
                 console.info(("Merging " + map.all().length + " files...").grey.italic);
             });
 
@@ -51,6 +56,22 @@ module.exports = {
         } catch (e) {
             console.info(e.message.red.italic);
             console.info("Merging failed...FAIL".red.bold);
+        }
+    },
+    info : function(options){
+       try {
+            var info = new this.Info(options.type,{
+                    excludes: options.excludes,
+                    source: options.source,
+                    output: options.output,
+                    compiler : options.compiler
+                });
+
+            console.info(("File " + info.print() + " created...").grey.italic);
+            console.info("Information output complete...OK".green.bold);
+        } catch (e) {
+            console.info(e.message.red.italic);
+            console.info("Information output failed...FAIL".red.bold);
         }
     }
 };

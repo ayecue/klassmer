@@ -13,6 +13,10 @@ exports.SELECTOR = {
 };
 
 exports.TYPES = {
+	DEFAULT : "commonjs"
+};
+
+exports.AST_TYPES = {
 	FUNCTION : "Function",
 	VAR : "Var",
 	VAR_DEF : "VarDef",
@@ -25,7 +29,7 @@ exports.TYPES = {
 	IF : "If",
 	BLOCK_STATEMENT : "BlockStatement",
 	SYMBOL_REF : "SymbolRef",
-	RETURN : "Return",
+	RETURN : "Return"
 };
 
 exports.AUTOLOADER = {
@@ -43,10 +47,11 @@ exports.ID = {
 
 exports.GENERATOR = {
 	STACK : "node#",
-	MODULE : "module_"
+	MODULE : "module_",
+	NODE : "internal_"
 };
 
-exports.FINDER = {
+exports.CJS_COMPILER = {
 	MAIN_SCOPE : 0,
 	ALL_SCOPES : 1,
 	REQUIRES : 2,
@@ -64,7 +69,7 @@ exports.PACKAGES = {
 	FILE_NAME : 'package.json'
 };
 
-exports.DEFAULTS = {
+exports.CJS_DEFAULTS = {
 	SEPARATOR : "\n\n",
 	NAMESPACE : "result",
 	MODULE : "var <%= idx %> = (function(){ <%= code %> })();",
@@ -73,7 +78,8 @@ exports.DEFAULTS = {
 	OPTIMIZER : {
         beautify : true,
         comments : true
-    }
+    },
+    COMPILER : 'CJSCompiler'
 };
 
 exports.ERRORS = {
@@ -85,10 +91,39 @@ exports.ERRORS = {
 	CONFIG_START_FILE : 'Invalid wrap.startFile option. Not a file.',
 	CONFIG_END_FILE : 'Invalid wrap.endFile option. Not a file.',
 	CONFIG_OPTIMIZER : 'Invalid optimizer options.',
+	CONFIG_COMPILER : 'Invalid compiler options.',
+	CONFIG_VALIDATE_EMPTY : 'Empty validation.',
 	MAP_IS_CYCLIC : 'Dependency map is cyclic.',
 	AUTOLOADER_GET_FILE : 'Cannot find file: <%= file %>',
 	AUTOLOADER_GET_MODULE : 'Cannot find file: <%= module %>',
 	MODULE_LOAD : 'Invalid require path "<%= modulePath %>".',
 	PARSER_PARSE : 'Error while parsing <%= file %>.',
-	PACKAGES_ADD : 'Main package option is not defined in <%= src %>.'
+	PACKAGES_ADD : 'Main package option is not defined in <%= src %>.',
+	COMPILER_GET : 'Compiler type with the name <%= name %> not found.',
+	NO_KLASS_FOUND : '<%= name %> do not exist.',
+	EVAL : 'Compile exception in code: <%= code %> (%message%)',
+	MANAGER_GET : 'Type <%= type %> not found'
+};
+
+exports.KLASS = {
+	DEBUGGING : false,
+	SINGLETON : false,
+	AUTO : true,
+	TEMPLATE : 'return function <%= name %>(){this._init && this._init();return this.constructor.apply(this, arguments) || null;};'
+};
+
+exports.LOGGER = {
+	EXCEPTION_COLOR : '#D8000C',
+	SUCCESS_COLOR : '#4F8A10',
+	USER_COLOR : '#008B8B',
+	UNKNOWN_NAME : 'unknown',
+	ANONYMOUS_NAME : 'anonymous',
+	SEARCH_PATTERN : /pLogMessage/i,
+	TRACE_PATTERN : /at\s(\S+)\s[^\(]*\(([^\)]+)\)/i,
+	TRACE_TPL : '${<%=name%>} (<%=link%>)',
+	STYLE_TPL : 'color:<%=hexcode%>;'
+};
+
+exports.LAYOUT = {
+	UNKNOWN : 'unknown'
 };
