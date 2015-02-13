@@ -42,7 +42,7 @@ Klass.define('Layout',{
             target = path.extname(output) === '.html' ? output : output + '.html';
 
 		writeFile(target,printf(template,{
-        	title : 'none',
+        	title : target,
         	style : style,
         	map : json,
         	code : code
