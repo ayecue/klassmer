@@ -1,7 +1,7 @@
-# klassmer v0.4.0
+# klassmer v0.4.1
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
-> Optimize CommonJS projects for your browser.
+> Optimize CommonJS/AMD projects for your browser and visualize dependencies.
 
 
 ## Getting Started
@@ -16,7 +16,7 @@ npm install klassmer
 
 ## Description
 
-This package will merge your CommonJS project to one file to use it in frontend without any overhead. Also you can generate HTML files which show all dependencies of your project. Also you got the possibility to use the intern 'Klass' system in your project.
+This package will merge your CommonJS project to one file to use it in frontend without any overhead. Also you can generate HTML files which show all dependencies of your project. Another feature is that you got the possibility to use the intern 'Klass' system in your project.
 
 
 ## Changelog
@@ -388,7 +388,6 @@ This method is there to create your classes. It's the basic klass constructor.
 Following properties are there to conifgurate your klass:
 
 * extends - Library you want to extend
-* requires - Libraries you need in your class
 * mixins - Mixins you want to use in your class
 * traits - Modules which should get extended to your class
 * statics - Static properties which you want to extend to your base
@@ -437,9 +436,6 @@ var smaller = klass.define('w.smaller',{
 		1 : 2
 	},
 	mkmk : [5,9,8],
-	requires : [
-		'w.run'
-	],
 	mixins : {
 		something : {
 			test : function(){
