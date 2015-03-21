@@ -6,7 +6,7 @@
 var fs = require('fs'),
 	colors = require('colors'),
 	program = require('commander'),
-	Klassmer = require('../src/klassmer');
+	Klass = require('node-klass');
 
 function list(v) {
 	return v.split(',');
@@ -27,4 +27,10 @@ program
 	.option('-c, --compiler [value]', '(optional) decide which compiler you want to use'.grey.italic)
 	.parse(process.argv);
 
-Klassmer.merge(program);
+Klass.setConfig({
+	source: __filename
+}).require([
+	'Klassmer'
+],function(){
+	Klassmer.merge(program);
+});
