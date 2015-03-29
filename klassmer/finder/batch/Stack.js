@@ -14,7 +14,11 @@ module.exports = Klass.define('Klassmer.Finder.Batch.Stack',{
 	requires: [
 		'Klassmer.Finder.Batch.Stack.Generator'
 	],
-	trace : [],
+	constructor: function(){
+		this.extend({
+			trace: []
+		});
+	},
 	add : function(node){
 		var me = this,
 			idx = me.trace.push(node) - 1;

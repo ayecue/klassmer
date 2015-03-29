@@ -16,7 +16,6 @@ module.exports = Klass.define('Klassmer.Finder.Batch.Selector',{
     requires: [
         'Klassmer.Finder.Batch.Selector.Condition'
     ],
-    found : [],
     statics : {
         factory : function(selectors){
             return forEach(selectors,function(_,config){
@@ -27,6 +26,7 @@ module.exports = Klass.define('Klassmer.Finder.Batch.Selector',{
     },
     constructor : function(config){
         this.extend({
+            found : [],
             conditions : Klassmer.Finder.Batch.Selector.Condition.factory(config.conditions),
             type : config.type,
             resultType : config.resultType

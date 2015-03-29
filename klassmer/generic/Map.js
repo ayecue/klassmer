@@ -11,7 +11,11 @@ var Klass = require('node-klass'),
     forEach = Klass.forEach;
 
 module.exports = Klass.define('Klassmer.Generic.Map',{
-    collection : [],
+    constructor: function(){
+        this.extend({
+            collection: []
+        });
+    },
     add : function(){
         var me = this;
         me.collection.push.apply(me.collection,arguments);

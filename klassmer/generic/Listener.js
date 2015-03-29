@@ -11,7 +11,11 @@ var Klass = require('node-klass'),
 	indexOf = Klass.indexOf;
 
 module.exports = Klass.define('Klassmer.Generic.Listener',{
-	pool : {},
+	constructor: function(){
+		this.extend({
+			pool: {}
+		});
+	},
 	/**
 	 *	Register event
 	 */

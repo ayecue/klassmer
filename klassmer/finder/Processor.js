@@ -61,16 +61,16 @@ module.exports = Klass.define('Klassmer.Finder.Processor',{
 			}
 		}
 	},
-	fn : null,
 	constructor : function(type,args){
 		this.extend({
+			fn : null,
 			type : type,
 			args : args
 		});
 	},
 	create : function(){
 		var me = this,
-			$class = me.getClass();
+			$class = me.getKlass();
 
 		me.fn = function(){
 			var args = toArray(arguments);

@@ -13,10 +13,10 @@ var Klass = require('node-klass'),
 	getNs = Klass.getNamespace;
 
 module.exports = Klass.define('Klassmer.Generic.Validator',{
-	fields : [],
 	constructor : function(config){
 		this.extend({
-			config : config
+			config : config,
+			fields : []
 		});
 	},
 	setConfig : function(config){

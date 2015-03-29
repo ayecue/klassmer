@@ -18,10 +18,10 @@ module.exports = Klass.define('Klassmer.Layout.Tree',{
     requires: [
         'Klassmer.Layout.Tree.Generator'
     ],
-    collection : [],
     constructor : function(id){
         this.extend({
-            id : id || CONSTANTS.LAYOUT.UNKNOWN
+            id : id || CONSTANTS.LAYOUT.UNKNOWN,
+            collection : []
         });
     },
    	add : function(){

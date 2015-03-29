@@ -10,9 +10,7 @@
 var colors = require('colors'),
     Klass = require('node-klass');
 
-module.exports = Klass.setConfig({
-    source: __filename
-}).define('Klassmer',{
+module.exports = Klass.define('Klassmer',{
     singleton: true,
     requires: [
         'Klassmer.Merger',

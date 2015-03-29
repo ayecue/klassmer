@@ -20,7 +20,7 @@ module.exports = Klass.define('Klassmer.Finder',{
 		'Klassmer.Finder.Processor'
 	],
 	constructor : function(){
-		var $class = this.getClass(),
+		var $class = this.getKlass(),
 			opts = $class.opts = {};
 
 		opts[CONSTANTS.AST_TYPES.FUNCTION] = new Klassmer.Finder.Processor('multi',['body']).get();
@@ -38,7 +38,7 @@ module.exports = Klass.define('Klassmer.Finder',{
 	},
 	findQueue : function(node,batch){
 		var me = this,
-			$class = me.getClass();
+			$class = me.getKlass();
 
         if (node instanceof uglifyjs.AST_Node) {
             if (node.TYPE in $class.opts) {

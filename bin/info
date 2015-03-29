@@ -19,9 +19,7 @@ program
 	.option('-c, --compiler [value]', '(optional) decide which compiler you want to use'.grey.italic)
 	.parse(process.argv);
 
-Klass.setConfig({
-	source: __filename
-}).require([
+Klass.setSource(__filename).setScope(GLOBAL).require([
 	'Klassmer'
 ],function(){
 	Klassmer.info(program);

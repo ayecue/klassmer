@@ -29,15 +29,15 @@ module.exports = Klass.define('Klassmer.Layout',{
 	draw : function(output,map){
 		var me = this,
 			json = map.toJSON(),
-			template = fs.readFileSync(me.getClass().templatePath,{
+			template = fs.readFileSync(me.getKlass().templatePath,{
                 encoding : CONSTANTS.READ.ENCODING,
                 flag : CONSTANTS.READ.FLAG
             }),
-            code = fs.readFileSync(me.getClass().codePath,{
+            code = fs.readFileSync(me.getKlass().codePath,{
                 encoding : CONSTANTS.READ.ENCODING,
                 flag : CONSTANTS.READ.FLAG
             }),
-            style = fs.readFileSync(me.getClass().stylePath,{
+            style = fs.readFileSync(me.getKlass().stylePath,{
                 encoding : CONSTANTS.READ.ENCODING,
                 flag : CONSTANTS.READ.FLAG
             }),
