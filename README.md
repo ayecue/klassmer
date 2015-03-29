@@ -1,4 +1,4 @@
-# klassmer v0.4.2
+# klassmer v0.4.3
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS/AMD projects for your browser and visualize dependencies.
