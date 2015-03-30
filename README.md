@@ -1,4 +1,4 @@
-# klassmer v0.4.4
+# klassmer v0.4.5
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS/AMD projects for your browser and visualize dependencies.
@@ -53,10 +53,15 @@ Merge with namespace:
 klassmer --source tmp/klass.js --output amd/merged.js --namespace klass
 ```
 
+![Merge](https://raw.githubusercontent.com/ayecue/img/master/klassmer/merge.gif)
+
+
 Info:
 ```shell
 klassmer-info --source tmp/klass.js --output amd/visual.html
 ```
+
+![Info](https://raw.githubusercontent.com/ayecue/img/master/klassmer/info.gif)
 
 
 ## Arguments
