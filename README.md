@@ -1,4 +1,4 @@
-# klassmer v0.4.5
+# klassmer v0.4.6
 [![Build Status](https://travis-ci.org/ayecue/klassmer.png?branch=master)](https://travis-ci.org/ayecue/klassmer)
 
 > Optimize CommonJS/AMD projects for your browser and visualize dependencies.
@@ -37,6 +37,8 @@ Since `~0.3.9` you can select which compiler you want to use (right now there's 
 Since `~0.4.0` refactored the whole library in preperation to new possible code patterns. Added functionality to create a html file which shows all dependencies.
 
 Since `~0.4.2` the Klass library is moved to an own npm package to keep this project smaller.
+
+Since `~0.4.6` fixed critical wrong namespace.
 
 
 ## Example:

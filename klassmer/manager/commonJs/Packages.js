@@ -64,7 +64,7 @@ module.exports = Klass.define('Klassmer.Manager.CommonJs.Packages',{
 			};
 
 		if (CONSTANTS.PACKAGES.FILE_NAME === basename) {
-			options = Package.read(src);
+			options = Klassmer.Manager.CommonJs.Packages.Package.read(src);
 
 			if (!options.main) {
 				throw new TypeError(printf(CONSTANTS.ERRORS.PACKAGES_ADD,'src',src));
