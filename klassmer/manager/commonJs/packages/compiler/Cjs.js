@@ -10,6 +10,7 @@
 var fs = require('fs'),
     uglifyjs = require('uglify-js'),
     Klass = require('node-klass'),
+    forEach = Klass.forEach,
     indexOf = Klass.indexOf,
     CONSTANTS = require('../../../../constants');
 
@@ -88,6 +89,8 @@ module.exports = Klass.define('Klassmer.Manager.CommonJs.Packages.Compiler.Cjs',
                 node.modulePath = foundPath;
             } else if (vardef.TYPE === CONSTANTS.AST_TYPES.ASSIGN) {
                 node.modulePath = foundPath;
+            } else if (vardef.TYPE === CONSTANTS.AST_TYPES.CALL) {
+                node.modulePath = foundPath;
             }
 
             module.getDependencies().add(dep);
@@ -130,6 +133,20 @@ module.exports = Klass.define('Klassmer.Manager.CommonJs.Packages.Compiler.Cjs',
 
                 $vardef.right = new uglifyjs.AST_SymbolRef({
                     name : found.getId()
+                });
+            } else if ($vardef.TYPE === CONSTANTS.AST_TYPES.CALL) {
+                var found = module.getPackage().findModule(node.modulePath);
+
+                forEach($vardef.args,function(index,callback){
+                    if (!callback.args) {
+                        return;
+                    }
+
+                    if (callback.args[0].value === node.args[0].value) {
+                        $vardef.args[index] = new uglifyjs.AST_SymbolRef({
+                            name : found.getId()
+                        });
+                    }
                 });
             }
         });
